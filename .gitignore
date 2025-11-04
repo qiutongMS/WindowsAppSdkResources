@@ -1,0 +1,183 @@
+# Windows App SDK Resources - Git Ignore File
+# This file excludes build artifacts, temporary files, and IDE-specific files
+# from being tracked in the Git repository
+
+## Build results and binaries
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+out/
+
+## Visual Studio IDE files
+.vs/
+*.user
+*.suo
+*.sln.docstates
+*.userprefs
+*.userosscache
+*.sln.ide/
+
+## Generated Files
+Generated\ Files/
+Generated Files/
+
+## Package directories and files
+packages/
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nupkg
+*.snupkg
+node_modules/
+
+## App Package directories and files
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.msixbundle
+*.msixupload
+
+## Build artifacts and temporary files
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.dll
+*.exe
+*.pch
+*.idb
+*.res
+*.cache
+*.tlog
+*.log
+*.lastbuildstate
+*.unsuccessfulbuild
+*.manifest
+*.intermediate.manifest
+*.embed.manifest
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Visual Studio Code
+.vscode/
+*.code-workspace
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## Temporary files
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+
+## Windows-specific files
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.stackdump
+*.lnk
+
+## macOS-specific files (for cross-platform development)
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+## NuGet
+*.nuget.props
+*.nuget.targets
+.nuget/
+
+## Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+
+## Backup files
+*.bak
+*.backup
+*~
+_UpgradeReport_Files/
+Backup*/
+UpgradeLog*.XML
+UpgradeLog*.htm
+
+## Local configuration files that should not be shared
+appsettings.local.json
+*.local.json
+.env
+.env.local
+
+## Documentation build outputs
+_site/
+.docfx/
+
+## Python (for any Python samples)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+## CMake (for C++ projects that might use CMake)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+## Conan (C++ package manager)
+conan.lock
+conanbuildinfo.*
+conaninfo.txt
+
+## vcpkg (C++ package manager)
+vcpkg_installed/
+
+## WinRT and Windows Runtime components
+*.winmd
+*.pri
+
+## Crash dumps and memory dumps
+*.dmp
+*.mdmp
+
+## Local History for Visual Studio
+.localhistory/
+
+## Visual Studio History (VSHistory) files
+.vshistory/
+
+## Fody - auto-generated XML schema
+FodyWeavers.xsd
