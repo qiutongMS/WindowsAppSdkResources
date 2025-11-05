@@ -7,7 +7,7 @@
     <!-- Unpackaged app: classic Win32 style manifest is optional. Uncomment if you need execution level, DPI awareness, etc. -->
     <!--<ApplicationManifest>app.manifest</ApplicationManifest>-->
     <Platforms>x64;ARM64;x86</Platforms>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <ApplicationManifest>BlankApp.dev.manifest.xml</ApplicationManifest>
     <ProjectPriFileName>resources.pri</ProjectPriFileName>
