@@ -1,0 +1,76 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Utility wrapper project used only to invoke the packaging script. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <UseFastUpToDateCheck>false</UseFastUpToDateCheck>
+  </PropertyGroup>
+
+  <!-- CI Build Configuration passthrough (kept for compatibility with original vcxproj) -->
+  <PropertyGroup Condition="'$(CIBuild)'=='true'">
+    <ForceCIPackaging>true</ForceCIPackaging>
+    <NoSignCI>true</NoSignCI>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Preserve packaging related files so IDE shows them and they are available to scripts. -->
+    <None Include="AppxManifest.xml" />
+    <None Include="BuildSparsePackage.ps1" />
+    <None Include="BuildSparsePackage.cmd" />
+    <None Include="Check-ProcessIdentity.ps1" />
+    <None Include="readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Map NoSign behavior for CI to a parameter passed into the script (mirrors the vcxproj logic). -->
+    <NoSignParam Condition="'$(NoSignCI)' == 'true'">-NoSign</NoSignParam>
+    <NoSignParam Condition="'$(NoSignCI)' != 'true'"> </NoSignParam>
+    <CIBuildParam Condition="'$(CIBuild)' == 'true'">-CIBuild</CIBuildParam>
+    <CIBuildParam Condition="'$(CIBuild)' != 'true'"> </CIBuildParam>
+  </PropertyGroup>
+
+  <Target Name="GenerateSparsePackage" BeforeTargets="PrepareForBuild">
+    <!-- Default Platform mapping: when building without a platform, prefer x64 to match original vcxproj behavior -->
+    <PropertyGroup>
+      <!-- Accept common MSBuild platform names and map them to the expected script platform (x64/arm64) -->
+      <!-- First, set PlatformParam to $(Platform) for any non-empty, non-AnyCPU value -->
+      <PlatformParam Condition="'$(Platform)' != 'Any CPU' AND '$(Platform)' != '' AND '$(Platform)' != 'AnyCPU'">$(Platform)</PlatformParam>
+      <!-- Then, override with specific supported mappings -->
+      <PlatformParam Condition="'$(Platform)' == 'x64' OR '$(Platform)' == 'X64'">x64</PlatformParam>
+      <PlatformParam Condition="'$(Platform)' == 'ARM64' OR '$(Platform)' == 'arm64'">arm64</PlatformParam>
+      <!-- Handle empty or AnyCPU as x64 (default) -->
+      <PlatformParam Condition="'$(Platform)' == 'Any CPU' OR '$(Platform)' == '' OR '$(Platform)' == 'AnyCPU'">x64</PlatformParam>
+      <!-- Fallback if PlatformParam is still empty -->
+      <PlatformParam Condition="'$(PlatformParam)' == ''">x64</PlatformParam>
+    </PropertyGroup>
+
+    <!-- Read identity values from the manifest so we can pass required parameters to the PS1 script -->
+    <!-- Use namespace-agnostic XPath to handle default namespace in AppxManifest.xml -->
+    <XmlPeek XmlInputPath="AppxManifest.xml" Query="/*[local-name() = 'Package']/*[local-name() = 'Identity']/@Name">
+      <Output TaskParameter="Result" PropertyName="IdentityName" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="AppxManifest.xml" Query="/*[local-name() = 'Package']/*[local-name() = 'Identity']/@Publisher">
+      <Output TaskParameter="Result" PropertyName="IdentityPublisher" />
+    </XmlPeek>
+
+    <!-- Derive package base name (strip trailing .SparseApp if present) -->
+    <PropertyGroup>
+      <PackageBaseName>$([System.String]::Copy($(IdentityName)).Replace('.SparseApp',''))</PackageBaseName>
+    </PropertyGroup>
+
+    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)BuildSparsePackage.ps1&quot; -Platform $(PlatformParam) -Configuration $(Configuration) -PackageName &quot;$(PackageBaseName)&quot; -Publisher &quot;$(IdentityPublisher)&quot; $(NoSignParam) $(CIBuildParam)"
+          ContinueOnError="false"
+          WorkingDirectory="$(MSBuildThisFileDirectory)" />
+  </Target>
+
+</Project>
