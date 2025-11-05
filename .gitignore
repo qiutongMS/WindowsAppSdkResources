@@ -18,6 +18,7 @@ bld/
 [Ll]og/
 [Ll]ogs/
 out/
+publish/
 
 ## Visual Studio IDE files
 .vs/
@@ -66,6 +67,7 @@ _pkginfo.txt
 *.cache
 *.tlog
 *.log
+*.binlog
 *.lastbuildstate
 *.unsuccessfulbuild
 *.manifest

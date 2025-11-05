@@ -204,8 +204,8 @@ if ($needNewCert) {
     $now = Get-Date
     $expiration = $now.AddMonths($script:Config.CertValidMonths)
     # Subject MUST match <Identity Publisher="..."> inside AppxManifest.xml
-    $friendlyName = "PowerToys Dev Sparse Cert Create=$now"
-    $keyFriendly = "PowerToys Dev Sparse Key Create=$now"
+    $friendlyName = "$PackageName Dev Sparse Cert Create=$now"
+    $keyFriendly = "$PackageName Dev Sparse Key Create=$now"
 
     $certStore = 'cert:\CurrentUser\My'
     $ekuOid = '2.5.29.37'
@@ -225,10 +225,9 @@ if ($needNewCert) {
     Export-Certificate -Cert $cert -FilePath $CertCerFile -Force | Out-Null
 }
 
-# Determine output directory - using PowerToys standard structure
-# Navigate to PowerToys root (two levels up from src/PackageIdentity)
-$PowerToysRoot = Split-Path (Split-Path $ProjectRoot -Parent) -Parent
-$outDir = Join-Path $PowerToysRoot "$Platform\$Configuration"
+# Determine output directory - using publish folder within PackageIdentity project
+# Following Visual Studio convention: Configuration\Platform
+$outDir = Join-Path $ProjectRoot "publish\$Configuration\$Platform"
 
 # If caller passed an explicit OutputDir, prefer that instead (allows project-local layouts)
 if ($PSBoundParameters.ContainsKey('OutputDir') -and $OutputDir) {
@@ -245,18 +244,32 @@ $sparseDir = $PSScriptRoot
 $manifestPath = Join-Path $sparseDir 'AppxManifest.xml'
 if (-not (Test-Path $manifestPath)) { throw "Missing AppxManifest.xml in PackageIdentity folder: $manifestPath" }
 
-$versionPropsPath = Join-Path $PowerToysRoot 'src\Version.props'
+# Look for Version.props in common project locations (optional)
+$versionPropsPath = $null
+$possibleVersionPaths = @(
+    (Join-Path $ProjectRoot 'Version.props'),
+    (Join-Path (Split-Path $ProjectRoot -Parent) 'Version.props'),
+    (Join-Path (Split-Path (Split-Path $ProjectRoot -Parent) -Parent) 'Version.props')
+)
+foreach ($path in $possibleVersionPaths) {
+    if (Test-Path $path) {
+        $versionPropsPath = $path
+        break
+    }
+}
+
 $targetManifestVersion = $null
 $versionCandidate = $null
-if (Test-Path $versionPropsPath) {
+if ($versionPropsPath) {
     try {
         [xml]$propsXml = Get-Content -Path $versionPropsPath -Raw
         $versionCandidate = $propsXml.Project.PropertyGroup.Version
+        Write-BuildLog "Found version file at: $versionPropsPath" -Level Info
     } catch {
         Write-BuildLog ("Unable to read version from {0}: {1}" -f $versionPropsPath, $_) -Level Warning
     }
 } else {
-    Write-BuildLog "Version.props not found at $versionPropsPath; manifest version will remain unchanged." -Level Warning
+    Write-BuildLog "Version.props not found in common locations; manifest version will remain unchanged." -Level Info
 }
 
 if ($versionCandidate) {
