@@ -43,11 +43,15 @@
     <!-- Default Platform mapping: when building without a platform, prefer x64 to match original vcxproj behavior -->
     <PropertyGroup>
       <!-- Accept common MSBuild platform names and map them to the expected script platform (x64/arm64) -->
-      <PlatformParam Condition="'$(Platform)' == 'Any CPU' OR '$(Platform)' == '' OR '$(Platform)' == 'AnyCPU'">x64</PlatformParam>
+      <!-- First, set PlatformParam to $(Platform) for any non-empty, non-AnyCPU value -->
+      <PlatformParam Condition="'$(Platform)' != 'Any CPU' AND '$(Platform)' != '' AND '$(Platform)' != 'AnyCPU'">$(Platform)</PlatformParam>
+      <!-- Then, override with specific supported mappings -->
       <PlatformParam Condition="'$(Platform)' == 'x64' OR '$(Platform)' == 'X64'">x64</PlatformParam>
       <PlatformParam Condition="'$(Platform)' == 'ARM64' OR '$(Platform)' == 'arm64'">arm64</PlatformParam>
+      <!-- Handle empty or AnyCPU as x64 (default) -->
+      <PlatformParam Condition="'$(Platform)' == 'Any CPU' OR '$(Platform)' == '' OR '$(Platform)' == 'AnyCPU'">x64</PlatformParam>
+      <!-- Fallback if PlatformParam is still empty -->
       <PlatformParam Condition="'$(PlatformParam)' == ''">x64</PlatformParam>
-      <PlatformParam Condition="'$(Platform)' != 'Any CPU' AND '$(Platform)' != '' AND '$(Platform)' != 'AnyCPU'">$(Platform)</PlatformParam>
     </PropertyGroup>
 
     <!-- Read identity values from the manifest so we can pass required parameters to the PS1 script -->
