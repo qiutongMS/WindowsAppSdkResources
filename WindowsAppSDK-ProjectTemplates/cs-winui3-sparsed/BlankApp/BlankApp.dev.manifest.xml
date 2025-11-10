@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity version="1.0.0.0" name="BlankApp" />
+
+  <!-- Embedded msix identity for local/dev builds -->
+  <msix xmlns="urn:schemas-microsoft-com:msix.v1"
+    packageName="BlankApp.SparseApp"
+    publisher="CN=<the publisher>"
+    applicationId="BlankApp" />
+</assembly>

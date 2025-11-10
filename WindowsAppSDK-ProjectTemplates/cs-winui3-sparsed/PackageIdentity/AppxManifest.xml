@@ -12,13 +12,13 @@
   xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
   IgnorableNamespaces="uap uap2 uap3 rescap desktop uap10 systemai">
   <Identity
-    Name="Microsoft.WinAppSDK.BlankApp.SparseApp"
-    Publisher="CN=WinAppSDK Blank App, O=Microsoft, L=Redmond, S=Washington, C=US"
+    Name="BlankApp.SparseApp"
+    Publisher="CN=<the publisher>"
     Version="0.0.1.0" />
 
   <Properties>
-  <DisplayName>WinAppSDK.BlankApp.SparseApp</DisplayName>
-  <PublisherDisplayName>WinAppSDK Blank App</PublisherDisplayName>
+  <DisplayName>BlankApp.SparseApp</DisplayName>
+  <PublisherDisplayName>the publisher</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
     <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
   </Properties>
@@ -36,7 +36,7 @@
   </Capabilities>
 
   <Applications>
-    <Application Id="WinAppSDK.BlankApp" Executable="BlankApp.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
+    <Application Id="BlankApp" Executable="BlankApp.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
       <uap:VisualElements
         DisplayName="Blank App"
         Description="WinAppSDK Blank App"

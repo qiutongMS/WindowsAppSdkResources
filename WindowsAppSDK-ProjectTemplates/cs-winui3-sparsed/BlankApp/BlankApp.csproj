@@ -21,7 +21,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
     <!-- Provide a sensible default RID when none specified -->
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">win-x64</RuntimeIdentifier>
+    <!-- <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">win-arm</RuntimeIdentifier> -->
     <!-- Ensure an app host is produced for self-contained executables -->
     <UseAppHost>true</UseAppHost>
   </PropertyGroup>
