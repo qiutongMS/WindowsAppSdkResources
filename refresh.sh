@@ -108,6 +108,6 @@ for BRANCH in $BRANCHES; do
 
     mv ./docs/* ./
 
-# done
+done
 
-# echo "All ai docs have been downloaded."
+echo "All ai docs have been downloaded."
