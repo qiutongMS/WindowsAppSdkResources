@@ -36,7 +36,7 @@
   </Capabilities>
 
   <Applications>
-    <Application Id="BlankApp" Executable="BlankApp.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
+    <Application Id="App" Executable="BlankApp.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
       <uap:VisualElements
         DisplayName="Blank App"
         Description="WinAppSDK Blank App"
