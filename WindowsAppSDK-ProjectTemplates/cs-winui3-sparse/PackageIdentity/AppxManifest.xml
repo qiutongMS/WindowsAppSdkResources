@@ -13,7 +13,7 @@
   IgnorableNamespaces="uap uap2 uap3 rescap desktop uap10 systemai">
   <Identity
     Name="BlankApp.SparseApp"
-    Publisher="CN=<the publisher>"
+    Publisher="CN=MyCompany"
     Version="0.0.1.0" />
 
   <Properties>
