@@ -71,6 +71,8 @@ _pkginfo.txt
 *.lastbuildstate
 *.unsuccessfulbuild
 *.manifest
+# Exception for application manifest files
+!app.manifest
 *.intermediate.manifest
 *.embed.manifest
 project.lock.json
