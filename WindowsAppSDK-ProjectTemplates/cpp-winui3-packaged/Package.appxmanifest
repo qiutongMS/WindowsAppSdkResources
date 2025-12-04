@@ -9,14 +9,14 @@
 
   <Identity
     Name="d76cf28e-4dcf-42e4-aa4c-1ae1656334f9"
-    Publisher="CN=Your Publisher Name"
+    Publisher="CN=Your Company"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="d76cf28e-4dcf-42e4-aa4c-1ae1656334f9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>BlankApp</DisplayName>
-    <PublisherDisplayName>Your Publisher Name</PublisherDisplayName>
+    <PublisherDisplayName>Your Company</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
