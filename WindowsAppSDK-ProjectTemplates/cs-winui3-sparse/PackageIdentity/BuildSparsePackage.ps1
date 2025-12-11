@@ -13,7 +13,7 @@ Param(
     [Parameter(Mandatory=$true, HelpMessage="Base name for the package (e.g., 'MyApp' or 'Company.MyApp')")]
     [string]$PackageName,
     
-    [Parameter(Mandatory=$true, HelpMessage="Publisher information (e.g., 'CN=MyCompany, O=MyOrg, C=US')")]
+    [Parameter(Mandatory=$true, HelpMessage="Publisher information (e.g., 'CN=Your Company, O=Your Org, C=US')")]
     [string]$Publisher,
     
     [Parameter(Mandatory=$false)]

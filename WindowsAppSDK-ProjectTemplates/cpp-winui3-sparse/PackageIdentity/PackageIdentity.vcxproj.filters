@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Images">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AppxManifest.xml" />
+    <None Include="readme.md" />
+    <None Include="Images\Square150x150Logo.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="Images\Square44x44Logo.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="Images\StoreLogo.png">
+      <Filter>Images</Filter>
+    </None>
+  </ItemGroup>
+</Project>
