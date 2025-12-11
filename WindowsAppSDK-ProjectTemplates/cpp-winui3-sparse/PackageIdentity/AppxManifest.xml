@@ -12,12 +12,12 @@
   IgnorableNamespaces="uap uap2 uap3 rescap desktop uap10 systemai">
   <Identity
     Name="BlankApp.SparseApp"
-    Publisher="CN=MyCompany"
+    Publisher="CN=Your Company"
     Version="0.0.1.0" />
 
   <Properties>
   <DisplayName>BlankApp.SparseApp</DisplayName>
-  <PublisherDisplayName>the publisher</PublisherDisplayName>
+  <PublisherDisplayName>Your Company</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
     <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
   </Properties>

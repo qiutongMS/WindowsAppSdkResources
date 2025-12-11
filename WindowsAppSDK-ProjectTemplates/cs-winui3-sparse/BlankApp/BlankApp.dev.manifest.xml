@@ -5,6 +5,6 @@
   <!-- Embedded msix identity for local/dev builds -->
   <msix xmlns="urn:schemas-microsoft-com:msix.v1"
     packageName="BlankApp.SparseApp"
-    publisher="CN=MyCompany"
+    publisher="CN=Your Company"
     applicationId="App" />
 </assembly>
