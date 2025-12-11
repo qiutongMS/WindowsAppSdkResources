@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sparse package manifest (moved to PackageIdentity folder for cleaner organization).
-     Based on Windows AI Foundry WPF sparse sample with PowerOCR customizations. -->
+<!-- Sparse package manifest for blank WinUI 3 C++ application template (moved to PackageIdentity folder for cleaner organization). -->
 <Package 
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
