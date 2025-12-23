@@ -1,0 +1,36 @@
+# Node / web
+node_modules/
+webui/node_modules/
+webui/dist/
+webui/.vite/
+webui/.turbo/
+webui/.cache/
+
+# Build outputs
+x64/
+ARM64/
+native/Winshell/bin/
+native/Winshell/obj/
+**/bin/
+**/obj/
+
+# EdgeDriver downloads
+**/edgedriver_*/
+tests/Winshell.E2E.WebDriver/edgedriver_ARM64/
+
+# VS / tooling
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+*.etl
+
+# Misc
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
