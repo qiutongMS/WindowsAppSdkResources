@@ -1,0 +1,347 @@
+{
+  "version": "2025-12-23",
+  "generatedAt": "2025-12-23T00:00:00Z",
+  "sourceRoot": "e:\\projects\\WinAppSDKIssueAnalysisMCP",
+  "totalEntries": 12,
+  "entries": [
+    {
+      "id": "wcr_missing_systemaimodels_capability",
+      "path": "output/tsg_wcr_missing_systemaimodels_capability.md",
+      "title": "COMException 'Not declared by app' when calling WCR AI APIs",
+      "area": "WinUI",
+      "symptoms": [
+        "System.Runtime.InteropServices.COMException with 'Unspecified error' and 'Not declared by app'",
+        "ImageDescriptionGenerator.GetReadyState() throws exception",
+        "TextRecognizer API throws 'Not declared by app' error",
+        "All Windows AI APIs fail with capability error"
+      ],
+      "errorCodes": ["0x80004005", "COMException"],
+      "keywords": ["systemAIModels", "capability", "Not declared by app", "WCR", "Windows Copilot Runtime", "AI APIs", "manifest", "ImageDescriptionGenerator", "TextRecognizer", "Phi Silica"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.7.250513003-experimental"
+      },
+      "projectType": "packaged",
+      "severity": "critical",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_msix_identity_required",
+      "path": "output/tsg_wcr_msix_identity_required.md",
+      "title": "Windows Copilot Runtime APIs Require MSIX Packaging",
+      "area": "Packaging",
+      "symptoms": [
+        "WCR APIs fail in unpackaged applications",
+        "UnauthorizedAccessException when calling WCR APIs without MSIX",
+        "AI Foundation APIs not working in traditional Win32 deployment"
+      ],
+      "errorCodes": ["UnauthorizedAccessException", "0x80070005"],
+      "keywords": ["MSIX", "unpackaged", "WCR", "Windows Copilot Runtime", "packaging", "identity", "AI Foundation"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.8.250515001-experimental2"
+      },
+      "projectType": "packaged",
+      "severity": "critical",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_unauthorized_unpackaged",
+      "path": "output/tsg_wcr_unauthorized_unpackaged.md",
+      "title": "UnauthorizedAccessException calling WCR APIs in unpackaged app",
+      "area": "Activation",
+      "symptoms": [
+        "System.UnauthorizedAccessException when calling ImageDescriptionGenerator",
+        "Access is denied / Denied access error message",
+        "WCR APIs fail after upgrading from experimental1 to experimental2"
+      ],
+      "errorCodes": ["UnauthorizedAccessException", "0x80070005"],
+      "keywords": ["UnauthorizedAccessException", "unpackaged", "ImageDescriptionGenerator", "access denied", "WCR", "experimental2"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.8.250515001-experimental2"
+      },
+      "projectType": "unpackaged",
+      "severity": "critical",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_x86_not_supported",
+      "path": "output/tsg_wcr_x86_not_supported.md",
+      "title": "WCR APIs throw REGDB_E_CLASSNOTREG on x86 architecture",
+      "area": "Runtime",
+      "symptoms": [
+        "Class not registered error when calling WCR APIs on x86",
+        "ImageDescriptionGenerator.GetReadyState() throws 0x80040154",
+        "WCR APIs work on x64/ARM64 but fail on x86"
+      ],
+      "errorCodes": ["0x80040154", "REGDB_E_CLASSNOTREG"],
+      "keywords": ["x86", "architecture", "class not registered", "REGDB_E_CLASSNOTREG", "ImageDescriptionGenerator", "WCR", "platform target"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.7.0-experimental"
+      },
+      "projectType": "packaged",
+      "severity": "common",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_getreadystate_not_updating",
+      "path": "output/tsg_wcr_getreadystate_not_updating.md",
+      "title": "GetReadyState returns EnsureNeeded after successful EnsureReadyAsync",
+      "area": "Runtime",
+      "symptoms": [
+        "GetReadyState still returns EnsureNeeded after EnsureReadyAsync succeeds",
+        "State check APIs not updating after model deployment",
+        "ImageDescriptionGenerator state inconsistency"
+      ],
+      "errorCodes": [],
+      "keywords": ["GetReadyState", "EnsureReadyAsync", "EnsureNeeded", "state", "ImageDescriptionGenerator", "WCR", "model availability"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.8.250410001-experimental1"
+      },
+      "projectType": "packaged",
+      "severity": "common",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_selfcontained_deployment_error",
+      "path": "output/tsg_wcr_selfcontained_deployment_error.md",
+      "title": "Application Error with WindowsAppSDKSelfContained and WCR APIs",
+      "area": "Deployment",
+      "symptoms": [
+        "Application Error when using WindowsAppSDKSelfContained property",
+        "WCR APIs throw exceptions with self-contained deployment",
+        "LanguageModel.IsAvailable() throws Application Error"
+      ],
+      "errorCodes": ["Application Error"],
+      "keywords": ["WindowsAppSDKSelfContained", "self-contained", "deployment", "WCR", "unpackaged", "csproj", "Phi Silica"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": "1.7.250127003-experimental3"
+      },
+      "projectType": "unpackaged",
+      "severity": "common",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_build_failure_package_references",
+      "path": "output/tsg_wcr_build_failure_package_references.md",
+      "title": "Build failure with duplicate publish output files when using WinUI and AI packages",
+      "area": "DeveloperTools",
+      "symptoms": [
+        "Found multiple publish output files with the same relative path",
+        "Build error with Microsoft.WindowsAppSDK.WinUI and Microsoft.WindowsAppSDK.AI packages",
+        "Duplicate .winmd files in publish output"
+      ],
+      "errorCodes": ["Multiple publish output files"],
+      "keywords": ["NuGet", "package reference", "WinUI", "AI", "duplicate", "winmd", "build error", "Microsoft.WindowsAppSDK.WinUI", "Microsoft.WindowsAppSDK.AI"],
+      "appliesTo": {
+        "windows": ">=10.0.19041",
+        "winappsdk": "1.8.250515001-experimental2"
+      },
+      "projectType": "packaged",
+      "severity": "common",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_phi_silica_not_declared",
+      "path": "output/tsg_wcr_phi_silica_not_declared.md",
+      "title": "Phi Silica GetReadyState throws 'Unspecified error Not declared by app'",
+      "area": "Runtime",
+      "symptoms": [
+        "LanguageModel.GetReadyState() throws COMException",
+        "Unspecified error Not declared by app when using Phi Silica",
+        "HResult=0x80004005 on Phi Silica API calls"
+      ],
+      "errorCodes": ["0x80004005", "COMException"],
+      "keywords": ["Phi Silica", "LanguageModel", "Not declared by app", "GetReadyState", "COMException", "LAF", "Limited Access Feature"],
+      "appliesTo": {
+        "windows": ">=10.0.26220",
+        "winappsdk": "2.0.250930001-experimental1"
+      },
+      "projectType": "packaged",
+      "severity": "critical",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_laf_missing",
+      "path": "output/tsg_wcr_laf_missing.md",
+      "title": "Limited Access Feature com.microsoft.windows.ai.languagemodel is missing",
+      "area": "Runtime",
+      "symptoms": [
+        "Limited Access Feature is not available: com.microsoft.windows.ai.languagemodel. Status: 3",
+        "Phi Silica generative samples do not work",
+        "AI Dev Gallery generative features fail"
+      ],
+      "errorCodes": ["Status: 3"],
+      "keywords": ["Limited Access Feature", "LAF", "com.microsoft.windows.ai.languagemodel", "Status 3", "Phi Silica", "missing"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.8.250916003"
+      },
+      "projectType": "packaged",
+      "severity": "critical",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_makeavailable_hanging_intel",
+      "path": "output/tsg_wcr_makeavailable_hanging_intel.md",
+      "title": "TextRecognizer.MakeAvailableAsync() hangs on Intel Core Ultra processors",
+      "area": "Runtime",
+      "symptoms": [
+        "MakeAvailableAsync() hangs without returning",
+        "No timeout or error message when calling MakeAvailableAsync",
+        "Application freezes on Intel Core Ultra during model deployment"
+      ],
+      "errorCodes": [],
+      "keywords": ["MakeAvailableAsync", "hanging", "Intel", "Core Ultra", "TextRecognizer", "timeout", "freeze"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": "1.7.250127003-experimental3"
+      },
+      "projectType": "packaged",
+      "severity": "common",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_ocr_winq_requirement",
+      "path": "output/tsg_wcr_ocr_winq_requirement.md",
+      "title": "TextRecognizer requires Win+Q initialization before use",
+      "area": "Runtime",
+      "symptoms": [
+        "TextRecognizer.IsAvailable() throws error if Win+Q not initialized",
+        "OCR fails until Windows Search is opened with Win+Q",
+        "Character recognition errors after fresh system install or restart"
+      ],
+      "errorCodes": [],
+      "keywords": ["TextRecognizer", "Win+Q", "Windows Search", "initialization", "OCR", "prerequisite", "AMD", "Intel"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.7.0-experimental"
+      },
+      "projectType": "packaged",
+      "severity": "edge",
+      "lastVerified": "2025-12-23"
+    },
+    {
+      "id": "wcr_class_not_registered_snapdragon",
+      "path": "output/tsg_wcr_class_not_registered_snapdragon.md",
+      "title": "REGDB_E_CLASSNOTREG error on Snapdragon X Elite processors",
+      "area": "Runtime",
+      "symptoms": [
+        "COMException: Class not registered (0x80040154)",
+        "WCR APIs fail with REGDB_E_CLASSNOTREG on Snapdragon devices",
+        "ImageDescriptionGenerator or TextRecognizer throws registration error"
+      ],
+      "errorCodes": ["0x80040154", "REGDB_E_CLASSNOTREG"],
+      "keywords": ["Class not registered", "REGDB_E_CLASSNOTREG", "0x80040154", "Snapdragon", "X Elite", "ARM64", "COM", "registration"],
+      "appliesTo": {
+        "windows": ">=10.0.26120",
+        "winappsdk": ">=1.7.0-experimental"
+      },
+      "projectType": "packaged",
+      "severity": "common",
+      "lastVerified": "2025-12-23"
+    }
+  ],
+  "areaCounts": {
+    "Runtime": 7,
+    "WinUI": 1,
+    "Packaging": 1,
+    "Activation": 1,
+    "Deployment": 1,
+    "DeveloperTools": 1
+  },
+  "invertedIndex": {
+    "byErrorCode": {
+      "0x80004005": ["wcr_missing_systemaimodels_capability", "wcr_phi_silica_not_declared"],
+      "COMException": ["wcr_missing_systemaimodels_capability", "wcr_phi_silica_not_declared"],
+      "UnauthorizedAccessException": ["wcr_msix_identity_required", "wcr_unauthorized_unpackaged"],
+      "0x80070005": ["wcr_msix_identity_required", "wcr_unauthorized_unpackaged"],
+      "0x80040154": ["wcr_x86_not_supported", "wcr_class_not_registered_snapdragon"],
+      "REGDB_E_CLASSNOTREG": ["wcr_x86_not_supported", "wcr_class_not_registered_snapdragon"],
+      "Application Error": ["wcr_selfcontained_deployment_error"],
+      "Multiple publish output files": ["wcr_build_failure_package_references"],
+      "Status: 3": ["wcr_laf_missing"]
+    },
+    "byKeyword": {
+      "systemAIModels": ["wcr_missing_systemaimodels_capability"],
+      "capability": ["wcr_missing_systemaimodels_capability"],
+      "Not declared by app": ["wcr_missing_systemaimodels_capability", "wcr_phi_silica_not_declared"],
+      "WCR": ["wcr_missing_systemaimodels_capability", "wcr_msix_identity_required", "wcr_unauthorized_unpackaged", "wcr_x86_not_supported", "wcr_getreadystate_not_updating", "wcr_selfcontained_deployment_error"],
+      "Windows Copilot Runtime": ["wcr_missing_systemaimodels_capability", "wcr_msix_identity_required"],
+      "AI APIs": ["wcr_missing_systemaimodels_capability"],
+      "manifest": ["wcr_missing_systemaimodels_capability"],
+      "ImageDescriptionGenerator": ["wcr_missing_systemaimodels_capability", "wcr_unauthorized_unpackaged", "wcr_x86_not_supported", "wcr_getreadystate_not_updating", "wcr_class_not_registered_snapdragon"],
+      "TextRecognizer": ["wcr_missing_systemaimodels_capability", "wcr_makeavailable_hanging_intel", "wcr_ocr_winq_requirement", "wcr_class_not_registered_snapdragon"],
+      "Phi Silica": ["wcr_missing_systemaimodels_capability", "wcr_selfcontained_deployment_error", "wcr_phi_silica_not_declared", "wcr_laf_missing"],
+      "MSIX": ["wcr_msix_identity_required"],
+      "unpackaged": ["wcr_msix_identity_required", "wcr_unauthorized_unpackaged", "wcr_selfcontained_deployment_error"],
+      "packaging": ["wcr_msix_identity_required"],
+      "identity": ["wcr_msix_identity_required"],
+      "AI Foundation": ["wcr_msix_identity_required"],
+      "UnauthorizedAccessException": ["wcr_unauthorized_unpackaged"],
+      "access denied": ["wcr_unauthorized_unpackaged"],
+      "experimental2": ["wcr_unauthorized_unpackaged"],
+      "x86": ["wcr_x86_not_supported"],
+      "architecture": ["wcr_x86_not_supported"],
+      "class not registered": ["wcr_x86_not_supported"],
+      "REGDB_E_CLASSNOTREG": ["wcr_x86_not_supported", "wcr_class_not_registered_snapdragon"],
+      "platform target": ["wcr_x86_not_supported"],
+      "GetReadyState": ["wcr_getreadystate_not_updating", "wcr_phi_silica_not_declared"],
+      "EnsureReadyAsync": ["wcr_getreadystate_not_updating"],
+      "EnsureNeeded": ["wcr_getreadystate_not_updating"],
+      "state": ["wcr_getreadystate_not_updating"],
+      "model availability": ["wcr_getreadystate_not_updating"],
+      "WindowsAppSDKSelfContained": ["wcr_selfcontained_deployment_error"],
+      "self-contained": ["wcr_selfcontained_deployment_error"],
+      "deployment": ["wcr_selfcontained_deployment_error"],
+      "csproj": ["wcr_selfcontained_deployment_error"],
+      "NuGet": ["wcr_build_failure_package_references"],
+      "package reference": ["wcr_build_failure_package_references"],
+      "WinUI": ["wcr_build_failure_package_references"],
+      "AI": ["wcr_build_failure_package_references"],
+      "duplicate": ["wcr_build_failure_package_references"],
+      "winmd": ["wcr_build_failure_package_references"],
+      "build error": ["wcr_build_failure_package_references"],
+      "Microsoft.WindowsAppSDK.WinUI": ["wcr_build_failure_package_references"],
+      "Microsoft.WindowsAppSDK.AI": ["wcr_build_failure_package_references"],
+      "LanguageModel": ["wcr_phi_silica_not_declared"],
+      "COMException": ["wcr_phi_silica_not_declared"],
+      "LAF": ["wcr_phi_silica_not_declared", "wcr_laf_missing"],
+      "Limited Access Feature": ["wcr_phi_silica_not_declared", "wcr_laf_missing"],
+      "com.microsoft.windows.ai.languagemodel": ["wcr_laf_missing"],
+      "Status 3": ["wcr_laf_missing"],
+      "missing": ["wcr_laf_missing"],
+      "MakeAvailableAsync": ["wcr_makeavailable_hanging_intel"],
+      "hanging": ["wcr_makeavailable_hanging_intel"],
+      "Intel": ["wcr_makeavailable_hanging_intel", "wcr_ocr_winq_requirement"],
+      "Core Ultra": ["wcr_makeavailable_hanging_intel"],
+      "timeout": ["wcr_makeavailable_hanging_intel"],
+      "freeze": ["wcr_makeavailable_hanging_intel"],
+      "Win+Q": ["wcr_ocr_winq_requirement"],
+      "Windows Search": ["wcr_ocr_winq_requirement"],
+      "initialization": ["wcr_ocr_winq_requirement"],
+      "OCR": ["wcr_ocr_winq_requirement"],
+      "prerequisite": ["wcr_ocr_winq_requirement"],
+      "AMD": ["wcr_ocr_winq_requirement"],
+      "Class not registered": ["wcr_class_not_registered_snapdragon"],
+      "0x80040154": ["wcr_class_not_registered_snapdragon"],
+      "Snapdragon": ["wcr_class_not_registered_snapdragon"],
+      "X Elite": ["wcr_class_not_registered_snapdragon"],
+      "ARM64": ["wcr_class_not_registered_snapdragon"],
+      "COM": ["wcr_class_not_registered_snapdragon"],
+      "registration": ["wcr_class_not_registered_snapdragon"]
+    },
+    "byArea": {
+      "WinUI": ["wcr_missing_systemaimodels_capability"],
+      "Packaging": ["wcr_msix_identity_required"],
+      "Activation": ["wcr_unauthorized_unpackaged"],
+      "Runtime": ["wcr_x86_not_supported", "wcr_getreadystate_not_updating", "wcr_phi_silica_not_declared", "wcr_laf_missing", "wcr_makeavailable_hanging_intel", "wcr_ocr_winq_requirement", "wcr_class_not_registered_snapdragon"],
+      "Deployment": ["wcr_selfcontained_deployment_error"],
+      "DeveloperTools": ["wcr_build_failure_package_references"]
+    }
+  }
+}
