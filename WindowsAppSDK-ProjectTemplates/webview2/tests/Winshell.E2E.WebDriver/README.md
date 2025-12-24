@@ -3,7 +3,7 @@
 This suite drives the real WebView2 inside the native app via Edge WebDriver.
 
 ## Prereqs
-- Build app: `pwsh ../scripts/build.ps1 -Configuration Debug -Platform x64` or `-Platform ARM64` (tests will pick x64 first; set `TEST_PLATFORM=ARM64` to force ARM64).
+ - Build app: `pwsh ../scripts/build.ps1 -Configuration Debug -Platform x64` or `-Platform arm64` (tests will pick x64 first; set `TEST_PLATFORM=arm64` to force arm64).
 - Edge WebDriver: place `msedgedriver.exe` in PATH, or set `MSEDGEDRIVER_PATH`/`MSEDGEDRIVER_DIR` to the downloaded location. Version must match your Edge/WebView2 runtime. You can fetch it via `pwsh ../scripts/get-edgedriver.ps1 -Channel Stable -Architecture ARM64 -OutputDir C:\Users\leilzh\Downloads\edgedriver_arm64` (swap `Architecture`/`OutputDir` as needed).
 
 ## How it works

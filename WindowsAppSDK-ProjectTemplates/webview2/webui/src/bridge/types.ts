@@ -29,6 +29,19 @@ export type BridgeError = {
   details?: unknown;
 };
 
+// Runtime BridgeError class for throwing and passing structured errors
+export class BridgeErrorClass extends Error {
+  code?: string;
+  data?: unknown;
+
+  constructor(message?: string, code?: string, data?: unknown) {
+    super(message ?? "BridgeError");
+    this.name = "BridgeError";
+    this.code = code;
+    this.data = data;
+  }
+}
+
 export type BridgeResponse =
   | { v: 1; id: string; ok: true; result?: unknown }
   | { v: 1; id: string; ok: false; error: BridgeError };
@@ -60,8 +73,8 @@ export type RemoveBackgroundResult = {
 
 export type WebViewBridge = {
   postMessage: (data: unknown) => void;
-  addEventListener: (type: "message", listener: (ev: MessageEvent<any>) => void) => void;
-  removeEventListener: (type: "message", listener: (ev: MessageEvent<any>) => void) => void;
+  addEventListener: (type: "message", listener: (ev: MessageEvent<unknown>) => void) => void;
+  removeEventListener: (type: "message", listener: (ev: MessageEvent<unknown>) => void) => void;
 };
 
 declare global {

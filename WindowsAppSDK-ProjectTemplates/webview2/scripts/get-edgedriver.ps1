@@ -2,7 +2,7 @@ param(
     [ValidateSet('Stable','Beta','Dev','Canary')]
     [string] $Channel = 'Stable',
 
-    [ValidateSet('x64','ARM64')]
+    [ValidateSet('x64','ARM64','arm64')]
     [string] $Architecture = 'x64',
 
     [string] $Version,
@@ -90,7 +90,7 @@ $fallbackUrl = "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriv
 $repoRoot = Split-Path -Parent $PSScriptRoot
 
 if (-not $OutputDir) {
-    $OutputDir = Join-Path $repoRoot "tests/Winshell.E2E.WebDriver/edgedriver_$Architecture"
+    $OutputDir = Join-Path $repoRoot "tests/Winshell.E2E.WebDriver/edgedriver_$($Architecture.ToLowerInvariant())"
 }
 
 $tempZip = [IO.Path]::ChangeExtension([IO.Path]::GetTempFileName(), '.zip')

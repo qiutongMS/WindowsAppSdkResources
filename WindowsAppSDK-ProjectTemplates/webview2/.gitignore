@@ -8,15 +8,16 @@ webui/.cache/
 
 # Build outputs
 x64/
-ARM64/
+arm64/
 native/Winshell/bin/
 native/Winshell/obj/
+native/Winshell/Web/
 **/bin/
 **/obj/
 
 # EdgeDriver downloads
 **/edgedriver_*/
-tests/Winshell.E2E.WebDriver/edgedriver_ARM64/
+tests/Winshell.E2E.WebDriver/edgedriver_arm64/
 
 # VS / tooling
 .vs/

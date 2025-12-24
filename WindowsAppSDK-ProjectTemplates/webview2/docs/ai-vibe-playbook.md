@@ -7,32 +7,32 @@ Quick reference for AI-assisted development: bring up the front end + native bri
 
 - Implement the requested change first.
 - Add focused debug logs (front end via `useLogger`/`app.log`, native via Serilog) around the new logic.
-- **Build everything**: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform ARM64` (or your arch). 
+ - **Build everything**: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform arm64` (or your arch). 
   - This runs `npm run build` (frontend) + compiles native code (embeds frontend into exe).
   - **Critical**: Changes to frontend code require BOTH `npm run build` AND native compilation to take effect in the exe.
   - Fix any build errors before proceeding.
 - Add/adjust E2E coverage for the new behavior in `tests/Winshell.E2E.WebDriver/BasicE2ETests.cs`.
-- Run the full E2E helper: `pwsh .\scripts\test-e2e.ps1 -Configuration Debug -Platform ARM64`.
+ - Run the full E2E helper: `pwsh .\scripts\test-e2e.ps1 -Configuration Debug -Platform arm64`.
   - This automatically builds the project, downloads EdgeDriver, sets environment variables, and runs tests.
   - Tests use the compiled exe, not the dev server.
-- Review test output in console and native logs in `ARM64/Debug/logs/` (or `x64/Debug/logs/`); iterate until green.
+ - Review test output in console and native logs in `arm64/Debug/logs/` (or `x64/Debug/logs/`); iterate until green.
 - Ship the feature.
 
 **Key insight**: The exe embeds the frontend assets. Running only `npm run build` updates files in `native/Winshell/Web/` but the exe won't use them until you recompile with `build.ps1` or `build-all.ps1`.
 
 ## Dev workflow
-- **Hot reload (recommended for development)**: `pwsh .\scripts\start-dev.ps1 -Configuration Debug -Platform ARM64` (use `-Platform x64` on x64).
+ - **Hot reload (recommended for development)**: `pwsh .\scripts\start-dev.ps1 -Configuration Debug -Platform arm64` (use `-Platform x64` on x64).
   - Starts Vite dev server on port 5173 with hot module replacement.
   - Sets `WINSHELL_DEV_URL` environment variable and launches the native exe.
   - Frontend changes reload instantly without recompiling native code.
   - Press Ctrl+C to stop both dev server and app.
-- **Full build (for testing/release)**: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform ARM64` (or `Release`/`x64`).
+ - **Full build (for testing/release)**: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform arm64` (or `Release`/`x64`).
   - Runs `npm install` (if needed) → `npm run build` → compiles native project.
-  - Frontend assets are embedded into the exe in `ARM64/Debug/` or `x64/Debug/`.
+  - Frontend assets are embedded into the exe in `arm64/Debug/` or `x64/Debug/`.
   - Use `-SkipWebBuild` to skip the web build step if frontend hasn't changed.
-- **Native-only build**: `pwsh .\scripts\build.ps1 -Configuration Debug -Platform ARM64`.
+ - **Native-only build**: `pwsh .\scripts\build.ps1 -Configuration Debug -Platform arm64`.
   - Only compiles native C# code, assumes `native/Winshell/Web/` already has built frontend assets.
-- **Run without building**: `pwsh .\scripts\run.ps1 -Configuration Debug -Platform ARM64`.
+ - **Run without building**: `pwsh .\scripts\run.ps1 -Configuration Debug -Platform arm64`.
   - Launches the exe without building anything.
 - Repo overview and quick commands: see `README.md` (AI/vibe section links to this playbook).
 
@@ -65,12 +65,12 @@ Quick reference for AI-assisted development: bring up the front end + native bri
 - Project: `tests/Winshell.E2E.WebDriver` (MSTest + Edge WebDriver using WebView2 remote debugging).
 - **Important**: E2E tests run against the compiled exe (not the dev server), so changes must be built with `build-all.ps1` first.
 - Prereqs: 
-  - Build the matching Debug package first (`x64/Debug` or `ARM64/Debug`).
-  - Optionally set `TEST_PLATFORM=ARM64` to force architecture.
+  - Build the matching Debug package first (`x64/Debug` or `arm64/Debug`).
+  - Optionally set `TEST_PLATFORM=arm64` to force architecture.
   - Set `MSEDGEDRIVER_DIR` if EdgeDriver isn't on PATH (script auto-downloads if needed).
 - **Recommended**: Use the helper script which handles building and environment setup:
   ```pwsh
-  pwsh ./scripts/test-e2e.ps1 -Configuration Debug -Platform ARM64
+  pwsh ./scripts/test-e2e.ps1 -Configuration Debug -Platform arm64
   ```
   This automatically:
   1. Compiles the test project
@@ -90,7 +90,7 @@ Quick reference for AI-assisted development: bring up the front end + native bri
   6) Clean up resources in `finally` blocks if needed.
 - Debugging failed tests:
   - Check test output for exception stack traces and assertion messages.
-  - Review native logs in `ARM64/Debug/logs/` or `x64/Debug/logs/` for backend errors.
+  - Review native logs in `arm64/Debug/logs/` or `x64/Debug/logs/` for backend errors.
   - Use `Console.WriteLine()` in tests to output debug information.
   - Increase timeout values if operations take longer than expected.
 
@@ -107,3 +107,4 @@ Quick reference for AI-assisted development: bring up the front end + native bri
 - UI misbehavior: `app.log` the inputs first, then check native logs; if missing, verify method name and bridge registration.
 - Native issues: add structured logs inside handlers; use debugger/`Debug.WriteLine` as needed.
 - E2E failures: ensure correct-arch build, EdgeDriver availability, and free port; update waits/selectors to match current UI.
+ - Identity issues while debugging: if your unpackaged Win32 binary doesn't activate with the sparse package identity during a debug session, build the package identity and register the sparse MSIX pointing `-ExternalLocation` at your debug output folder (for example `x64/Debug` or `arm64/Debug`). This forces Windows to associate the package identity with the exact debug binaries. See `PackageIdentity/readme.md` for step-by-step commands.

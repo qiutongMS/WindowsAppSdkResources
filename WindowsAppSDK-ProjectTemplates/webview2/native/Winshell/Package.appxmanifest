@@ -9,13 +9,13 @@
 
   <Identity
     Name="Winshell.Sparse"
-    Publisher="CN=PowerToys Dev, O=PowerToys, L=Redmond, S=Washington, C=US"
+    Publisher="CN=WinShell Dev, O=WinShell, L=Redmond, S=Washington, C=US"
     Version="1.0.0.0"
     ProcessorArchitecture="neutral" />
 
   <Properties>
     <DisplayName>Winshell</DisplayName>
-    <PublisherDisplayName>PowerToys Dev</PublisherDisplayName>
+    <PublisherDisplayName>WinShell Dev</PublisherDisplayName>
     <Logo>Assets\\StoreLogo.png</Logo>
   </Properties>
 
