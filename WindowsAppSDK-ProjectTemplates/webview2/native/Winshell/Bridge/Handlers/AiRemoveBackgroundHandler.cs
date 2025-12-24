@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Graphics.Imaging;
 using Microsoft.Windows.AI;
 using Microsoft.Windows.AI.Imaging;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Windows.Graphics;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
@@ -15,8 +15,13 @@ namespace Winshell.Handlers;
 
 public sealed class AiRemoveBackgroundHandler
 {
-    private static readonly ILogger Log = Serilog.Log.ForContext<AiRemoveBackgroundHandler>();
+    private readonly ILogger<AiRemoveBackgroundHandler>? _log;
     private static readonly JsonSerializerOptions WebJson = new(JsonSerializerDefaults.Web);
+
+    public AiRemoveBackgroundHandler(ILogger<AiRemoveBackgroundHandler>? log = null)
+    {
+        _log = log;
+    }
 
     public async Task<JsonNode?> HandleAsync(JsonObject? p)
     {
@@ -29,7 +34,7 @@ public sealed class AiRemoveBackgroundHandler
         
         var includeCount = (p?["includePoints"] as JsonArray)?.Count ?? 0;
         var excludeCount = (p?["excludePoints"] as JsonArray)?.Count ?? 0;
-        Log.Information("AiRemoveBackground called, includePoints={IncludeCount}, excludePoints={ExcludeCount}", includeCount, excludeCount);
+        _log?.LogInformation("AiRemoveBackground called, includePoints={IncludeCount}, excludePoints={ExcludeCount}", includeCount, excludeCount);
 
         var readyBefore = "Unknown";
         var readyAfter = "Unknown";
@@ -43,9 +48,9 @@ public sealed class AiRemoveBackgroundHandler
 
         try
         {
-            extractor = await ImageObjectExtractor.CreateWithSoftwareBitmapAsync(bitmap);
-            readyBefore = GetReadyState(extractor);
-            Log.Information("ImageObjectExtractor created successfully. readyBefore={ReadyBefore}", readyBefore);
+                extractor = await ImageObjectExtractor.CreateWithSoftwareBitmapAsync(bitmap);
+                readyBefore = GetReadyState(extractor);
+            _log?.LogInformation("ImageObjectExtractor created successfully. readyBefore={ReadyBefore}", readyBefore);
 
             var ensureResult = await EnsureReadySafeAsync(extractor);
             readyAfter = ensureResult.ReadyAfter;
@@ -56,12 +61,12 @@ public sealed class AiRemoveBackgroundHandler
         catch (Exception ex)
         {
             createError = ex;
-            Log.Error(ex, "CreateWithSoftwareBitmapAsync failed");
+            _log?.LogError(ex, "CreateWithSoftwareBitmapAsync failed");
         }
 
         if (extractor is null)
         {
-            Log.Error("ImageObjectExtractor create failed: {CreateError}", createError?.Message);
+            _log?.LogError("ImageObjectExtractor create failed: {CreateError}", createError?.Message);
             var result = new RemoveBackgroundResult(MaskBase64: null);
             return JsonSerializer.SerializeToNode(result, WebJson);
         }
@@ -78,13 +83,13 @@ public sealed class AiRemoveBackgroundHandler
 
             var result = new RemoveBackgroundResult(MaskBase64: maskBase64);
 
-            Log.Information("Background removed. size={Width}x{Height} readyBefore={ReadyBefore} readyAfter={ReadyAfter} status={Status}", mask.PixelWidth, mask.PixelHeight, readyBefore, readyAfter, ensureStatus ?? string.Empty);
+            _log?.LogInformation("Background removed. size={Width}x{Height} readyBefore={ReadyBefore} readyAfter={ReadyAfter} status={Status}", mask.PixelWidth, mask.PixelHeight, readyBefore, readyAfter, ensureStatus ?? string.Empty);
 
             return JsonSerializer.SerializeToNode(result, WebJson);
         }
     }
 
-    private static string GetReadyState(ImageObjectExtractor extractor)
+    private string GetReadyState(ImageObjectExtractor extractor)
     {
         try
         {
@@ -94,12 +99,12 @@ public sealed class AiRemoveBackgroundHandler
         }
         catch (Exception ex)
         {
-            Log.Debug(ex, "Failed to read ReadyState");
+            _log?.LogDebug(ex, "Failed to read ReadyState");
             return "Unknown";
         }
     }
 
-    private static async Task<EnsureState> EnsureReadySafeAsync(ImageObjectExtractor extractor)
+    private async Task<EnsureState> EnsureReadySafeAsync(ImageObjectExtractor extractor)
     {
         var readyAfter = GetReadyState(extractor);
         string? status = null;
@@ -109,7 +114,7 @@ public sealed class AiRemoveBackgroundHandler
         var ensureMethod = extractor.GetType().GetMethod("EnsureReadyAsync", Type.EmptyTypes);
         if (ensureMethod is null)
         {
-            Log.Information("EnsureReadyAsync not available; skipping readiness check");
+            _log?.LogInformation("EnsureReadyAsync not available; skipping readiness check");
             return new EnsureState(readyAfter, status, error, extendedError);
         }
 
@@ -128,23 +133,23 @@ public sealed class AiRemoveBackgroundHandler
 
             readyAfter = GetReadyState(extractor);
         }
-        catch (Exception ex)
-        {
-            status ??= "Failure";
-            error ??= ex.Message;
-            readyAfter = GetReadyState(extractor);
-            Log.Error(ex, "EnsureReadyAsync failed");
-        }
+            catch (Exception ex)
+            {
+                status ??= "Failure";
+                error ??= ex.Message;
+                readyAfter = GetReadyState(extractor);
+                _log?.LogError(ex, "EnsureReadyAsync failed");
+            }
 
         return new EnsureState(readyAfter, status, error, extendedError);
     }
 
-    private static async Task<object?> AwaitMaybeAsync(object? candidate)
+    private async Task<object?> AwaitMaybeAsync(object? candidate)
     {
         switch (candidate)
         {
             case null:
-                Log.Warning("EnsureReadyAsync returned null; skipping readiness check");
+                _log?.LogWarning("EnsureReadyAsync returned null; skipping readiness check");
                 return null;
             case Task task:
                 await task.ConfigureAwait(false);
@@ -176,11 +181,11 @@ public sealed class AiRemoveBackgroundHandler
             return task.GetType().GetProperty("Result")?.GetValue(task);
         }
 
-        Log.Warning("EnsureReadyAsync returned unsupported type {Type}; skipping readiness check", type.FullName);
+        _log?.LogWarning("EnsureReadyAsync returned unsupported type {Type}; skipping readiness check", type.FullName);
         return null;
     }
 
-    private static string? FormatError(object? value)
+    private string? FormatError(object? value)
     {
         return value switch
         {

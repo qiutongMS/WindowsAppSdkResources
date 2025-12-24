@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Winshell.Handlers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Winshell;
 
@@ -8,17 +9,24 @@ public sealed class BridgeRouter
 {
     private readonly Dictionary<string, Func<JsonObject?, Task<JsonNode?>>> _handlers;
 
-    public BridgeRouter()
+    public BridgeRouter(IServiceProvider services)
     {
-        _handlers = new(StringComparer.OrdinalIgnoreCase)
-        {
-            [BridgeMethods.AppGetInfo] = new AppInfoHandler().HandleAsync,
-            [BridgeMethods.ClipboardGetText] = new ClipboardGetTextHandler().HandleAsync,
-            [BridgeMethods.ClipboardSetText] = new ClipboardSetTextHandler().HandleAsync,
-            [BridgeMethods.AiEcho] = new AiEchoHandler().HandleAsync,
-            [BridgeMethods.AiRemoveBackground] = new AiRemoveBackgroundHandler().HandleAsync,
-            [BridgeMethods.AppLog] = new LogHandler().HandleAsync,
-        };
+        _handlers = new(StringComparer.OrdinalIgnoreCase);
+
+        // Resolve handlers from DI. Expect services not null (caller must provide).
+        var appInfoHandler = services.GetRequiredService<Winshell.Handlers.AppInfoHandler>();
+        var clipboardGetHandler = services.GetRequiredService<Winshell.Handlers.ClipboardGetTextHandler>();
+        var clipboardSetHandler = services.GetRequiredService<Winshell.Handlers.ClipboardSetTextHandler>();
+        var aiEchoHandler = services.GetRequiredService<Winshell.Handlers.AiEchoHandler>();
+        var aiRemoveHandler = services.GetRequiredService<Winshell.Handlers.AiRemoveBackgroundHandler>();
+        var logHandler = services.GetRequiredService<Winshell.Handlers.LogHandler>();
+
+        _handlers[BridgeMethods.AppGetInfo] = appInfoHandler.HandleAsync;
+        _handlers[BridgeMethods.ClipboardGetText] = clipboardGetHandler.HandleAsync;
+        _handlers[BridgeMethods.ClipboardSetText] = clipboardSetHandler.HandleAsync;
+        _handlers[BridgeMethods.AiEcho] = aiEchoHandler.HandleAsync;
+        _handlers[BridgeMethods.AiRemoveBackground] = aiRemoveHandler.HandleAsync;
+        _handlers[BridgeMethods.AppLog] = logHandler.HandleAsync;
     }
 
     public async Task<string> HandleAsync(string requestJson)

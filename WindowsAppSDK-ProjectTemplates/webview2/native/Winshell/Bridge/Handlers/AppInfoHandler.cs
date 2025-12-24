@@ -8,6 +8,13 @@ namespace Winshell.Handlers;
 
 public sealed class AppInfoHandler
 {
+    private readonly Microsoft.Extensions.Logging.ILogger<AppInfoHandler>? _log;
+
+    public AppInfoHandler(Microsoft.Extensions.Logging.ILogger<AppInfoHandler>? log = null)
+    {
+        _log = log;
+    }
+
     public Task<JsonNode?> HandleAsync(JsonObject? _)
     {
         try

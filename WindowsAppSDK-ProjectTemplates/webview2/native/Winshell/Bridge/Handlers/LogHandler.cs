@@ -1,14 +1,19 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Winshell.Bridge;
 
 namespace Winshell.Handlers;
 
 public sealed class LogHandler
 {
-    private static readonly ILogger Log = Serilog.Log.ForContext<LogHandler>();
+    private readonly ILogger<LogHandler>? _log;
     private static readonly JsonSerializerOptions WebJson = new(JsonSerializerDefaults.Web);
+
+    public LogHandler(ILogger<LogHandler>? log = null)
+    {
+        _log = log;
+    }
 
     public Task<JsonNode?> HandleAsync(JsonObject? p)
     {
@@ -22,13 +27,13 @@ public sealed class LogHandler
         {
             case "warn":
             case "warning":
-                Log.Warning("WEB {Message} meta={Meta}", message, metaJson);
+                _log?.LogWarning("WEB {Message} meta={Meta}", message, metaJson);
                 break;
             case "error":
-                Log.Error("WEB {Message} meta={Meta}", message, metaJson);
+                _log?.LogError("WEB {Message} meta={Meta}", message, metaJson);
                 break;
             default:
-                Log.Information("WEB {Message} meta={Meta}", message, metaJson);
+                _log?.LogInformation("WEB {Message} meta={Meta}", message, metaJson);
                 break;
         }
 

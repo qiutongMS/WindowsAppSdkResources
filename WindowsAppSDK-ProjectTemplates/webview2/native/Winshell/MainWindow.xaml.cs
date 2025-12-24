@@ -2,15 +2,19 @@ using System;
 using System.IO;
 using Microsoft.UI.Xaml;
 using Microsoft.Web.WebView2.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Winshell;
 
 public sealed partial class MainWindow : Window
 {
-    private readonly BridgeRouter _router = new();
+    private readonly BridgeRouter _router;
 
     public MainWindow()
     {
+        // Resolve router from DI if available
+        _router = App.Services?.GetService<BridgeRouter>() ?? throw new InvalidOperationException("BridgeRouter not available - ensure App.Services is initialized");
+
         InitializeComponent();
         _ = EnsureWebViewAsync();
     }

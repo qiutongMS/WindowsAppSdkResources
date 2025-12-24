@@ -6,6 +6,13 @@ namespace Winshell.Handlers;
 
 public sealed class AiEchoHandler
 {
+    private readonly Microsoft.Extensions.Logging.ILogger<AiEchoHandler>? _log;
+
+    public AiEchoHandler(Microsoft.Extensions.Logging.ILogger<AiEchoHandler>? log = null)
+    {
+        _log = log;
+    }
+
     public Task<JsonNode?> HandleAsync(JsonObject? p)
     {
         var input = p?["text"]?.GetValue<string>() ?? string.Empty;

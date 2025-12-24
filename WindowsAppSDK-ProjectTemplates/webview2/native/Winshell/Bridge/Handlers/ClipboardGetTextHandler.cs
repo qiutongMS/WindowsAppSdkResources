@@ -7,6 +7,13 @@ namespace Winshell.Handlers;
 
 public sealed class ClipboardGetTextHandler
 {
+    private readonly Microsoft.Extensions.Logging.ILogger<ClipboardGetTextHandler>? _log;
+
+    public ClipboardGetTextHandler(Microsoft.Extensions.Logging.ILogger<ClipboardGetTextHandler>? log = null)
+    {
+        _log = log;
+    }
+
     public Task<JsonNode?> HandleAsync(JsonObject? _)
     {
         var data = Clipboard.GetContent();
