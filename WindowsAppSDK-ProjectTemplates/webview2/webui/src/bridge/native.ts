@@ -44,7 +44,7 @@ let listenerInitialized = false;
 function initListener(webview: WebViewBridge) {
   if (listenerInitialized) return;
 
-  const handler = (ev: MessageEvent<BridgeResponse>) => {
+  const handler = (ev: MessageEvent<unknown>) => {
     try {
       const msg = ev?.data as BridgeResponse | undefined;
       if (!msg?.id) return;
