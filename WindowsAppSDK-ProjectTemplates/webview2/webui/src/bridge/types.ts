@@ -35,6 +35,29 @@ export type BridgeResponse =
 
 export type NativeInvoker = (method: BridgeMethod, params?: Record<string, unknown>) => Promise<unknown>;
 
+// Bridge method return types
+export type AppInfoResult = {
+  name: string;
+  version: string;
+  packaged: boolean;
+};
+
+export type ClipboardTextResult = {
+  text: string;
+};
+
+export type OperationOkResult = {
+  ok: boolean;
+};
+
+export type AiEchoResult = {
+  text: string;
+};
+
+export type RemoveBackgroundResult = {
+  maskBase64: string | null;
+};
+
 export type WebViewBridge = {
   postMessage: (data: unknown) => void;
   addEventListener: (type: "message", listener: (ev: MessageEvent<any>) => void) => void;

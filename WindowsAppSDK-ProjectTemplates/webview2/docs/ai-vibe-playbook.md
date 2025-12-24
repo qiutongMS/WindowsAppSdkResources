@@ -2,19 +2,38 @@
 
 Quick reference for AI-assisted development: bring up the front end + native bridge, log to pinpoint issues, and validate with E2E.
 
-## Task loop (when AI is coding)
+## AI Agent Task Loop: Follow These Steps for Every Feature
+**Instructions for AI coding assistants: Execute these steps in order for all feature implementations.**
+
 - Implement the requested change first.
 - Add focused debug logs (front end via `useLogger`/`app.log`, native via Serilog) around the new logic.
-- Build end-to-end: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform ARM64` (or your arch). Fix any build errors.
-- Add/adjust E2E coverage for the new behavior.
-- Run the full E2E helper: `pwsh .\scripts\test-e2e.ps1 -Configuration Debug -Platform ARM64` (auto-downloads EdgeDriver, sets envs, runs tests).
-- Review test output and native logs; iterate until green.
+- **Build everything**: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform ARM64` (or your arch). 
+  - This runs `npm run build` (frontend) + compiles native code (embeds frontend into exe).
+  - **Critical**: Changes to frontend code require BOTH `npm run build` AND native compilation to take effect in the exe.
+  - Fix any build errors before proceeding.
+- Add/adjust E2E coverage for the new behavior in `tests/Winshell.E2E.WebDriver/BasicE2ETests.cs`.
+- Run the full E2E helper: `pwsh .\scripts\test-e2e.ps1 -Configuration Debug -Platform ARM64`.
+  - This automatically builds the project, downloads EdgeDriver, sets environment variables, and runs tests.
+  - Tests use the compiled exe, not the dev server.
+- Review test output in console and native logs in `ARM64/Debug/logs/` (or `x64/Debug/logs/`); iterate until green.
 - Ship the feature.
 
+**Key insight**: The exe embeds the frontend assets. Running only `npm run build` updates files in `native/Winshell/Web/` but the exe won't use them until you recompile with `build.ps1` or `build-all.ps1`.
+
 ## Dev workflow
-- Hot reload: `pwsh .\scripts\start-dev.ps1 -Configuration Debug -Platform x64 -Port 5173` (use `-Platform ARM64` on ARM). The script sets `WINSHELL_DEV_URL` and launches the native host.
-- One-shot build: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform ARM64` (or Release/x64). Add `-SkipWebBuild` to skip the web build.
-- Native-only run: `pwsh .\scripts\run.ps1 -Configuration Debug -Platform ARM64` (assumes web assets already built into `native/Winshell/Web`).
+- **Hot reload (recommended for development)**: `pwsh .\scripts\start-dev.ps1 -Configuration Debug -Platform ARM64` (use `-Platform x64` on x64).
+  - Starts Vite dev server on port 5173 with hot module replacement.
+  - Sets `WINSHELL_DEV_URL` environment variable and launches the native exe.
+  - Frontend changes reload instantly without recompiling native code.
+  - Press Ctrl+C to stop both dev server and app.
+- **Full build (for testing/release)**: `pwsh .\scripts\build-all.ps1 -Configuration Debug -Platform ARM64` (or `Release`/`x64`).
+  - Runs `npm install` (if needed) → `npm run build` → compiles native project.
+  - Frontend assets are embedded into the exe in `ARM64/Debug/` or `x64/Debug/`.
+  - Use `-SkipWebBuild` to skip the web build step if frontend hasn't changed.
+- **Native-only build**: `pwsh .\scripts\build.ps1 -Configuration Debug -Platform ARM64`.
+  - Only compiles native C# code, assumes `native/Winshell/Web/` already has built frontend assets.
+- **Run without building**: `pwsh .\scripts\run.ps1 -Configuration Debug -Platform ARM64`.
+  - Launches the exe without building anything.
 - Repo overview and quick commands: see `README.md` (AI/vibe section links to this playbook).
 
 ## Bridge usage and extension
@@ -44,24 +63,45 @@ Quick reference for AI-assisted development: bring up the front end + native bri
 
 ## E2E tests (WebDriver)
 - Project: `tests/Winshell.E2E.WebDriver` (MSTest + Edge WebDriver using WebView2 remote debugging).
-- Prereqs: build the matching Debug package first (`x64/Debug` or `ARM64/Debug`); optionally set `TEST_PLATFORM=ARM64` to force architecture; set `MSEDGEDRIVER_DIR` if EdgeDriver isn’t on PATH.
-- Run example:
-  ```pwsh
-  pwsh -c "dotnet test tests/Winshell.E2E.WebDriver/Winshell.E2E.WebDriver.csproj -c Debug"
-  ```
-- Shortcut (auto driver download + envs):
+- **Important**: E2E tests run against the compiled exe (not the dev server), so changes must be built with `build-all.ps1` first.
+- Prereqs: 
+  - Build the matching Debug package first (`x64/Debug` or `ARM64/Debug`).
+  - Optionally set `TEST_PLATFORM=ARM64` to force architecture.
+  - Set `MSEDGEDRIVER_DIR` if EdgeDriver isn't on PATH (script auto-downloads if needed).
+- **Recommended**: Use the helper script which handles building and environment setup:
   ```pwsh
   pwsh ./scripts/test-e2e.ps1 -Configuration Debug -Platform ARM64
   ```
-- Writing new cases:
-  1) Reuse the existing `ClassInitialize` to start the app and driver;
-  2) Locate UI elements via XPath/CSS and trigger bridge calls;
-  3) Use explicit waits to assert UI/results (see `BasicE2ETests.cs`).
+  This automatically:
+  1. Compiles the test project
+  2. Downloads EdgeDriver if missing
+  3. Sets environment variables (`TEST_PLATFORM`, `MSEDGEDRIVER_DIR`)
+  4. Runs all tests
+- Manual run (if needed):
+  ```pwsh
+  pwsh -c "dotnet test tests/Winshell.E2E.WebDriver/Winshell.E2E.WebDriver.csproj -c Debug"
+  ```
+- Writing new test cases:
+  1) Add test methods to `BasicE2ETests.cs` (or create new test classes).
+  2) Reuse the existing `ClassInitialize` to start the app and WebDriver.
+  3) Locate UI elements via XPath/CSS selectors (e.g., `By.XPath("//button[contains(text(),'Submit')]")`).
+  4) Use explicit waits (`WebDriverWait`) to ensure UI is ready before assertions.
+  5) Test both happy paths and error scenarios.
+  6) Clean up resources in `finally` blocks if needed.
+- Debugging failed tests:
+  - Check test output for exception stack traces and assertion messages.
+  - Review native logs in `ARM64/Debug/logs/` or `x64/Debug/logs/` for backend errors.
+  - Use `Console.WriteLine()` in tests to output debug information.
+  - Increase timeout values if operations take longer than expected.
 
 ## Front-end responsibilities
 - Keep UI state/validation in the front end; route cross-process/system capabilities through the bridge.
 - Stack: Vite + React; bridge calls are wrapped in `webui/src/bridge/`—avoid touching `window.chrome.webview` directly.
-- Build: `npm run build` outputs to `native/Winshell/Web`, then the native host serves it.
+- **Build process**: 
+  - `npm run build` outputs to `native/Winshell/Web/` (these are just files on disk).
+  - Native compilation embeds these files into the exe as resources.
+  - **The exe only sees the files that were present during compilation**, not subsequent `npm run build` outputs.
+  - For development with hot reload, use `start-dev.ps1` which uses a dev server instead of embedded assets.
 
 ## Common troubleshooting paths
 - UI misbehavior: `app.log` the inputs first, then check native logs; if missing, verify method name and bridge registration.
