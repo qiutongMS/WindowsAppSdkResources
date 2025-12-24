@@ -13,7 +13,7 @@ using Winshell.Bridge;
 
 namespace Winshell.Handlers;
 
-public sealed class AiRemoveBackgroundHandler
+public sealed class AiRemoveBackgroundHandler : Winshell.Bridge.IBridgeHandler
 {
     private readonly ILogger<AiRemoveBackgroundHandler>? _log;
     private static readonly JsonSerializerOptions WebJson = new(JsonSerializerDefaults.Web);
@@ -88,6 +88,8 @@ public sealed class AiRemoveBackgroundHandler
             return JsonSerializer.SerializeToNode(result, WebJson);
         }
     }
+
+    public string Method => BridgeMethods.AiRemoveBackground;
 
     private string GetReadyState(ImageObjectExtractor extractor)
     {

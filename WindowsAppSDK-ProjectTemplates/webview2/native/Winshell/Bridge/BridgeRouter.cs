@@ -13,20 +13,15 @@ public sealed class BridgeRouter
     {
         _handlers = new(StringComparer.OrdinalIgnoreCase);
 
-        // Resolve handlers from DI. Expect services not null (caller must provide).
-        var appInfoHandler = services.GetRequiredService<Winshell.Handlers.AppInfoHandler>();
-        var clipboardGetHandler = services.GetRequiredService<Winshell.Handlers.ClipboardGetTextHandler>();
-        var clipboardSetHandler = services.GetRequiredService<Winshell.Handlers.ClipboardSetTextHandler>();
-        var aiEchoHandler = services.GetRequiredService<Winshell.Handlers.AiEchoHandler>();
-        var aiRemoveHandler = services.GetRequiredService<Winshell.Handlers.AiRemoveBackgroundHandler>();
-        var logHandler = services.GetRequiredService<Winshell.Handlers.LogHandler>();
+        // Resolve all registered IBridgeHandler instances from DI and register by their Method
+        var handlers = services.GetServices<Winshell.Bridge.IBridgeHandler>();
+        foreach (var h in handlers)
+        {
+            if (string.IsNullOrWhiteSpace(h.Method))
+                continue;
 
-        _handlers[BridgeMethods.AppGetInfo] = appInfoHandler.HandleAsync;
-        _handlers[BridgeMethods.ClipboardGetText] = clipboardGetHandler.HandleAsync;
-        _handlers[BridgeMethods.ClipboardSetText] = clipboardSetHandler.HandleAsync;
-        _handlers[BridgeMethods.AiEcho] = aiEchoHandler.HandleAsync;
-        _handlers[BridgeMethods.AiRemoveBackground] = aiRemoveHandler.HandleAsync;
-        _handlers[BridgeMethods.AppLog] = logHandler.HandleAsync;
+            _handlers[h.Method] = h.HandleAsync;
+        }
     }
 
     public async Task<string> HandleAsync(string requestJson)
@@ -35,11 +30,13 @@ public sealed class BridgeRouter
 
         try
         {
-            var root = JsonNode.Parse(requestJson)?.AsObject() ?? throw new InvalidOperationException("Invalid JSON");
-            id = root["id"]?.GetValue<string>();
-            var version = root["v"]?.GetValue<int?>();
-            var method = root["method"]?.GetValue<string>();
-            var @params = root["params"] as JsonObject;
+            var req = System.Text.Json.JsonSerializer.Deserialize<Winshell.Bridge.BridgeRequest>(requestJson)
+                      ?? throw new InvalidOperationException("Invalid JSON");
+
+            id = req.id;
+            var version = req.v;
+            var method = req.method;
+            var @params = req.@params as JsonObject;
 
             if (string.IsNullOrWhiteSpace(id))
                 return BridgeProtocol.ResponseError("", code: BridgeErrorCodes.InvalidRequest, message: "Missing request id");

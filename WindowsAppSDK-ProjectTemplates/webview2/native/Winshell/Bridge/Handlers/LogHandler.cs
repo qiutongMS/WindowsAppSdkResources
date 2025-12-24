@@ -5,7 +5,7 @@ using Winshell.Bridge;
 
 namespace Winshell.Handlers;
 
-public sealed class LogHandler
+public sealed class LogHandler : Winshell.Bridge.IBridgeHandler
 {
     private readonly ILogger<LogHandler>? _log;
     private static readonly JsonSerializerOptions WebJson = new(JsonSerializerDefaults.Web);
@@ -39,4 +39,6 @@ public sealed class LogHandler
 
         return Task.FromResult(JsonSerializer.SerializeToNode(new OperationOkResult(true)));
     }
+
+    public string Method => BridgeMethods.AppLog;
 }

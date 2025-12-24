@@ -33,13 +33,13 @@ public sealed partial class App : Application
         // Register Microsoft logging that forwards to Serilog (dispose logger when provider disposed)
         services.AddLogging(builder => builder.AddSerilog(serilogLogger, dispose: true));
 
-        // Register handlers so they can be resolved via DI
-        services.AddTransient<Winshell.Handlers.AppInfoHandler>();
-        services.AddTransient<Winshell.Handlers.ClipboardGetTextHandler>();
-        services.AddTransient<Winshell.Handlers.ClipboardSetTextHandler>();
-        services.AddTransient<Winshell.Handlers.AiEchoHandler>();
-        services.AddTransient<Winshell.Handlers.AiRemoveBackgroundHandler>();
-        services.AddTransient<Winshell.Handlers.LogHandler>();
+        // Register handlers so they can be resolved via DI (register as IBridgeHandler for discovery)
+        services.AddTransient<Winshell.Bridge.IBridgeHandler, Winshell.Handlers.AppInfoHandler>();
+        services.AddTransient<Winshell.Bridge.IBridgeHandler, Winshell.Handlers.ClipboardGetTextHandler>();
+        services.AddTransient<Winshell.Bridge.IBridgeHandler, Winshell.Handlers.ClipboardSetTextHandler>();
+        services.AddTransient<Winshell.Bridge.IBridgeHandler, Winshell.Handlers.AiEchoHandler>();
+        services.AddTransient<Winshell.Bridge.IBridgeHandler, Winshell.Handlers.AiRemoveBackgroundHandler>();
+        services.AddTransient<Winshell.Bridge.IBridgeHandler, Winshell.Handlers.LogHandler>();
 
         // Register BridgeRouter as a singleton built from the service provider
         services.AddSingleton<BridgeRouter>(sp => new BridgeRouter(sp));

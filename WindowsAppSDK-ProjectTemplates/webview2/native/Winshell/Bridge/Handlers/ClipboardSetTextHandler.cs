@@ -5,7 +5,7 @@ using Winshell.Bridge;
 
 namespace Winshell.Handlers;
 
-public sealed class ClipboardSetTextHandler
+public sealed class ClipboardSetTextHandler : Winshell.Bridge.IBridgeHandler
 {
     private readonly Microsoft.Extensions.Logging.ILogger<ClipboardSetTextHandler>? _log;
 
@@ -24,4 +24,6 @@ public sealed class ClipboardSetTextHandler
 
         return Task.FromResult(JsonSerializer.SerializeToNode(new OperationOkResult(true)));
     }
+
+    public string Method => BridgeMethods.ClipboardSetText;
 }

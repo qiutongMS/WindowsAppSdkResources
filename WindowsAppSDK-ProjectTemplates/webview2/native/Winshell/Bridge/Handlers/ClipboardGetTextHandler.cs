@@ -5,7 +5,7 @@ using Winshell.Bridge;
 
 namespace Winshell.Handlers;
 
-public sealed class ClipboardGetTextHandler
+public sealed class ClipboardGetTextHandler : Winshell.Bridge.IBridgeHandler
 {
     private readonly Microsoft.Extensions.Logging.ILogger<ClipboardGetTextHandler>? _log;
 
@@ -28,4 +28,6 @@ public sealed class ClipboardGetTextHandler
         var text = await data.GetTextAsync();
         return JsonSerializer.SerializeToNode(new ClipboardTextResult(text));
     }
+
+    public string Method => BridgeMethods.ClipboardGetText;
 }

@@ -6,7 +6,7 @@ using Windows.ApplicationModel;
 
 namespace Winshell.Handlers;
 
-public sealed class AppInfoHandler
+public sealed class AppInfoHandler : Winshell.Bridge.IBridgeHandler
 {
     private readonly Microsoft.Extensions.Logging.ILogger<AppInfoHandler>? _log;
 
@@ -36,4 +36,6 @@ public sealed class AppInfoHandler
             return Task.FromResult(JsonSerializer.SerializeToNode(fallback));
         }
     }
+
+    public string Method => BridgeMethods.AppGetInfo;
 }

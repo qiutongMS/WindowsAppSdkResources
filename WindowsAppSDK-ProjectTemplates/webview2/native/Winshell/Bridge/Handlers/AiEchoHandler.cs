@@ -4,7 +4,7 @@ using Winshell.Bridge;
 
 namespace Winshell.Handlers;
 
-public sealed class AiEchoHandler
+public sealed class AiEchoHandler : Winshell.Bridge.IBridgeHandler
 {
     private readonly Microsoft.Extensions.Logging.ILogger<AiEchoHandler>? _log;
 
@@ -19,4 +19,6 @@ public sealed class AiEchoHandler
         var result = new AiEchoResult($"echo: {input}");
         return Task.FromResult(JsonSerializer.SerializeToNode(result));
     }
+
+    public string Method => BridgeMethods.AiEcho;
 }
