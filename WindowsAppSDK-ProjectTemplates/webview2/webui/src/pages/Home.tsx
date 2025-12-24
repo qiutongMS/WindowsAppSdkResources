@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNativeInvoke } from "../hooks/useNative";
 import { BridgeMethods } from "../bridge/types";
 
@@ -15,47 +15,58 @@ export function Home() {
   const clipGet = useNativeInvoke(BridgeMethods.ClipboardGetText);
   const clipSet = useNativeInvoke(BridgeMethods.ClipboardSetText);
   const aiEcho = useNativeInvoke(BridgeMethods.AiEcho);
-
-  const lastResult = useMemo(
-    () => info.data ?? clipGet.data ?? clipSet.data ?? aiEcho.data,
-    [info.data, clipGet.data, clipSet.data, aiEcho.data]
-  );
-  const lastError = useMemo(
-    () => info.error ?? clipGet.error ?? clipSet.error ?? aiEcho.error,
-    [info.error, clipGet.error, clipSet.error, aiEcho.error]
-  );
-
-
   return (
-    <div className="card">
+    <div className="cards">
       <h2>Native Bridge Demo</h2>
       <p>Call WinUI host methods and get JSON back.</p>
 
-      <div className="buttons">
+      <div className="card">
+        <h3>App Info</h3>
         <button className="primary" disabled={info.loading} onClick={() => info.call()}>
           app.getInfo
         </button>
+        <h4>Result</h4>
+        <pre className="output">{info.error ? pretty(info.error) : pretty(info.data)}</pre>
+      </div>
+
+      <div className="card">
+        <h3>Clipboard - Get</h3>
         <button className="primary" disabled={clipGet.loading} onClick={() => clipGet.call()}>
           clipboard.getText
         </button>
+        <h4>Result</h4>
+        <pre className="output">{clipGet.error ? pretty(clipGet.error) : pretty(clipGet.data)}</pre>
+      </div>
+
+      <div className="card">
+        <h3>Clipboard - Set</h3>
+        <input
+          className="text"
+          placeholder="Text to set to clipboard"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
         <button className="primary" disabled={clipSet.loading} onClick={() => clipSet.call({ text })}>
           clipboard.setText
         </button>
+        <h4>Result</h4>
+        <pre className="output">{clipSet.error ? pretty(clipSet.error) : pretty(clipSet.data)}</pre>
+      </div>
+
+      <div className="card">
+        <h3>AI - Echo</h3>
+        <input
+          className="text"
+          placeholder="Text to echo"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
         <button className="primary" disabled={aiEcho.loading} onClick={() => aiEcho.call({ text })}>
           ai.echo
         </button>
+        <h4>Result</h4>
+        <pre className="output">{aiEcho.error ? pretty(aiEcho.error) : pretty(aiEcho.data)}</pre>
       </div>
-
-      <input
-        className="text"
-        placeholder="Type something..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-
-      <h3>Result</h3>
-      <pre className="output">{lastError ? pretty(lastError) : pretty(lastResult)}</pre>
-
     </div>
   );
 }
