@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "typegen.console": {
+      "version": "4.3.0",
+      "commands": ["dotnet-tg", "tg"]
+    }
+  }
+}
