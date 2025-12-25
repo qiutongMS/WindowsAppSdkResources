@@ -73,6 +73,7 @@ _pkginfo.txt
 *.manifest
 # Exception for application manifest files
 !app.manifest
+!app.Debug.manifest
 *.intermediate.manifest
 *.embed.manifest
 project.lock.json

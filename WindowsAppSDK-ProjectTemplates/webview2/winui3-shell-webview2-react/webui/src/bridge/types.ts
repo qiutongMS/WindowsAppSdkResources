@@ -1,0 +1,88 @@
+export const BridgeMethods = {
+  AppGetInfo: "app.getInfo",
+  ClipboardGetText: "clipboard.getText",
+  ClipboardSetText: "clipboard.setText",
+  AiEcho: "ai.echo",
+  AiRemoveBackground: "ai.removeBackground",
+  AppLog: "app.log",
+} as const;
+
+export type BridgeMethod = (typeof BridgeMethods)[keyof typeof BridgeMethods];
+
+export const BridgeErrorCodes = {
+  InvalidRequest: "invalid_request",
+  VersionNotSupported: "version_not_supported",
+  MethodNotFound: "method_not_found",
+  Exception: "exception",
+} as const;
+
+export type BridgeRequest = {
+  v: 1;
+  id: string;
+  method: BridgeMethod;
+  params?: Record<string, unknown>;
+};
+
+export type BridgeError = {
+  code: string;
+  message: string;
+  details?: unknown;
+};
+
+// Runtime BridgeError class for throwing and passing structured errors
+export class BridgeErrorClass extends Error {
+  code?: string;
+  data?: unknown;
+
+  constructor(message?: string, code?: string, data?: unknown) {
+    super(message ?? "BridgeError");
+    this.name = "BridgeError";
+    this.code = code;
+    this.data = data;
+  }
+}
+
+export type BridgeResponse =
+  | { v: 1; id: string; ok: true; result?: unknown }
+  | { v: 1; id: string; ok: false; error: BridgeError };
+
+export type NativeInvoker = (method: BridgeMethod, params?: Record<string, unknown>) => Promise<unknown>;
+
+// Bridge method return types
+export type AppInfoResult = {
+  name: string;
+  version: string;
+  packaged: boolean;
+};
+
+export type ClipboardTextResult = {
+  text: string;
+};
+
+export type OperationOkResult = {
+  ok: boolean;
+};
+
+export type AiEchoResult = {
+  text: string;
+};
+
+export type RemoveBackgroundResult = {
+  maskBase64: string | null;
+};
+
+export type WebViewBridge = {
+  postMessage: (data: unknown) => void;
+  addEventListener: (type: "message", listener: (ev: MessageEvent<unknown>) => void) => void;
+  removeEventListener: (type: "message", listener: (ev: MessageEvent<unknown>) => void) => void;
+};
+
+declare global {
+  interface Window {
+    chrome?: {
+      webview?: WebViewBridge;
+    };
+  }
+}
+
+export {};
