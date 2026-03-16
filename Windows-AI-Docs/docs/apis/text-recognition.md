@@ -1,8 +1,8 @@
 ---
 title: Get Started with Text Recognition (OCR) in the Windows App SDK
-description: Learn about the Artificial Intelligence (AI) text recognition features that ship with the Windows App SDK and can be used to identify characters in an image, recognize words, lines, polygonal boundaries, and provide confidence levels for the generated matches.
+description: Learn about the Artificial Intelligence (AI) text recognition features that ship with the Windows App SDK that you can use to identify characters in an image, recognize words, lines, polygonal boundaries, and provide confidence levels for the generated matches.
 ms.topic: get-started
-ms.date: 11/17/2025
+ms.date: 01/21/2026
 dev_langs:
 - csharp
 - cpp
@@ -58,7 +58,7 @@ public async Task<ImageBuffer> LoadImageBufferFromFileAsync(string filePath)
 }
 ```
 
-```cpp
+```cppwinrt
 #include <iostream>
 #include <sstream>
 #include <winrt/Microsoft.Windows.AI.Imaging.h>
@@ -107,7 +107,7 @@ The following example shows how to recognize some text in a [SoftwareBitmap](/uw
 1. Return the string.
 
 > [!NOTE]
-> The `EnsureModelIsReady` function is used to check the readiness state of the text recognition model (and install it if necessary).
+> The `EnsureModelIsReady` function checks the readiness state of the text recognition model (and installs it if necessary).
 
 ```csharp
 using Microsoft.Windows.AI.Imaging;
@@ -147,7 +147,7 @@ public async Task<TextRecognizer> EnsureModelIsReady()
 }
 ```
 
-```cpp
+```cppwinrt
 winrt::Windows::Foundation::IAsyncOperation<winrt::Microsoft::Windows::AI::Imaging::TextRecognizer> MainWindow::EnsureModelIsReady()
 {
     if (winrt::Microsoft::Windows::AI::Imaging::TextRecognizer::GetReadyState() == AIFeatureReadyState::NotReady)
@@ -224,7 +224,7 @@ public void VisualizeWordBoundariesOnGrid(
 }
 ```
 
-```cpp
+```cppwinrt
 void MainWindow::VisualizeWordBoundariesOnGrid(
     Windows::Graphics::Imaging::SoftwareBitmap const& bitmap,
     Grid const& grid,
@@ -273,7 +273,7 @@ void MainWindow::VisualizeWordBoundariesOnGrid(
 
 ## Responsible AI
 
-We have used a combination of the following steps to ensure these imaging APIs are trustworthy, secure, and built responsibly. We recommend reviewing the best practices described in [Responsible Generative AI Development on Windows](../rai.md) when implementing AI features in your app.
+We've followed core principles and practices described in the [Microsoft Responsible AI Standards](https://www.microsoft.com/ai/principles-and-approach) to ensure these APIs are trustworthy, secure, and built responsibly. For more details on implementing AI features in your app, see [Responsible Generative AI Development on Windows](/windows/ai/rai).
 
 ## See also
 

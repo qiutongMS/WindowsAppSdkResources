@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using BlankApp.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -27,6 +16,8 @@ namespace BlankApp
     public partial class App : Application
     {
         private Window? _window;
+        private readonly IServiceProvider _services;
+        private readonly ILogger<App> _logger;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -35,6 +26,14 @@ namespace BlankApp
         public App()
         {
             InitializeComponent();
+
+            _services = ConfigureServices();
+            _logger = _services.GetRequiredService<ILogger<App>>();
+
+            // Global exception hooks to capture crashes and unobserved faults
+            this.UnhandledException += OnUnhandledException;
+            TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+            AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
         }
 
         /// <summary>
@@ -45,6 +44,55 @@ namespace BlankApp
         {
             _window = new MainWindow();
             _window.Activate();
+        }
+
+        public static T GetService<T>() where T : class
+        {
+            if (Current is not App app)
+            {
+                throw new InvalidOperationException("Application has not been initialized");
+            }
+
+            return app._services.GetRequiredService<T>();
+        }
+
+        private IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+            services.AddAppLogging();
+
+            // Register application services and dependencies for DI
+#if INCLUDE_SAMPLES
+            services.AddSingleton<BlankApp.Data.IUserRepositorySample, BlankApp.Data.UserRepositorySample>();
+            services.AddSingleton<BlankApp.Services.IUserServiceSample, BlankApp.Services.UserServiceSample>();
+            services.AddTransient<BlankApp.ViewModels.MainViewModelSample>();
+#endif
+
+            return services.BuildServiceProvider();
+        }
+
+        private void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            _logger.LogCritical(e.Exception, "Unhandled UI exception");
+            e.Handled = true;
+        }
+
+        private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+        {
+            _logger.LogCritical(e.Exception, "Unobserved task exception");
+            e.SetObserved();
+        }
+
+        private void OnDomainUnhandledException(object? sender, System.UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception ex)
+            {
+                _logger.LogCritical(ex, "Domain unhandled exception. Terminating={IsTerminating}", e.IsTerminating);
+            }
+            else
+            {
+                _logger.LogCritical("Domain unhandled non-Exception. Terminating={IsTerminating}", e.IsTerminating);
+            }
         }
     }
 }

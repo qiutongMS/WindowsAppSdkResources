@@ -1,6 +1,6 @@
 ---
 title: Get Started with AI Image Generation in the Windows App SDK
-description: Learn about the new Artificial Intelligence (AI) image generation features that ship with the Windows App SDK and can be used to to create, transform, and enhance images and photos using natural language prompts and on-device generative models.
+description: Learn about the new Artificial Intelligence (AI) image generation features that ship with the Windows App SDK that you can use to create, transform, and enhance images and photos using natural language prompts and on-device generative models.
 ms.topic: get-started
 ms.date: 11/18/2025
 dev_langs:
@@ -9,11 +9,13 @@ dev_langs:
 
 # Get started with AI Image Generation
 
-AI Image Generation features are supported by Microsoft Foundry on Windows through a set of artificial intelligence-backed, Stable Diffusion-powered (open-source AI model used for processing images) APIs that ship in the Windows App SDK. These APIs can be used in your Windows apps to create, transform, and enhance images and photos using natural language prompts and on-device generative models.
+Microsoft Foundry on Windows supports AI Image Generation features through a set of artificial intelligence-backed, Stable Diffusion-powered (open-source AI model used for processing images) APIs that ship in the Windows App SDK. You can use these APIs in your Windows apps to create, transform, and enhance images and photos using natural language prompts and on-device generative models.
 
 AI Image Generation is optimized for efficiency and performance on Windows Copilot+ PCs.
 
 For **API details**, see [API ref for AI imaging features](/windows/windows-app-sdk/api/winrt/microsoft.windows.ai.imaging).
+
+[!INCLUDE [AI APIs package manifest requirement](./includes/ai-apis-package-manifest-requirements.md)]
 
 ## Prerequisites
 
@@ -39,7 +41,7 @@ Use AI Image Generation to turn prompts into visual artifacts. Supported feature
 
 - **Coloring Book Style**
 
-  Convert images into simplified outlines that can be used for a coloring book or similar educational experience.
+  Convert images into simplified outlines that you can use for a coloring book or similar educational experience.
 
 - **Restyle**
 
@@ -277,7 +279,9 @@ public async Task CreateImageFromPromptAndCustomOptions()
 
 ## Responsible AI
 
-We have used a combination of the following steps to ensure these imaging APIs are trustworthy, secure, and built responsibly. We recommend reviewing the best practices described in [Responsible Generative AI Development on Windows](/windows/ai/rai) when implementing AI features in your app.
+Follow responsible AI recommendations, including transparency and user trust, when using these APIs to modify or generate images in your Windows apps. To help users understand the origin and history of generated or modified images, provide Content Credentials as specified by the [Coalition for Content Provenance and Authenticity (C2PA)]( https://c2pa.org/) standards.
+
+See [Responsible Generative AI Development on Windows](/windows/ai/rai) for best practices when implementing AI features in Windows apps.
 
 ## See also
 

@@ -16,14 +16,16 @@
     <WindowsPackageType>None</WindowsPackageType>
     <Nullable>enable</Nullable>
 
-    <!-- Do not publish the .NET runtime as self-contained. Instead make the Windows App SDK
-         self-contained so the WinAppRuntime native components are deployed with the app. -->
+    <!-- Package the Windows App SDK (WinAppRuntime) native components with the app,
+     rather than relying on a framework-installed Windows App SDK runtime. -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
     <!-- Provide a sensible default RID when none specified -->
     <!-- <RuntimeIdentifier Condition="'$(RuntimeIdentifier)'==''">win-arm</RuntimeIdentifier> -->
     <!-- Ensure an app host is produced for self-contained executables -->
     <UseAppHost>true</UseAppHost>
+    <IncludeSamples Condition="'$(IncludeSamples)' == ''">false</IncludeSamples>
+    <DefineConstants Condition="'$(IncludeSamples)' == 'true'">$(DefineConstants);INCLUDE_SAMPLES</DefineConstants>
   </PropertyGroup>
 
   <!-- MSIX capability/property groups removed since app is unpackaged -->
@@ -31,10 +33,40 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
+
+    <!-- Dependency Injection -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+
+    <!-- Logging - Microsoft Core + Windows Event Log -->
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="9.0.0" />
+
+    <!-- Logging - File with rotation (Serilog integrates with Microsoft.Extensions.Logging) -->
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+
+    <!-- MVVM helpers for WinUI 3 (RelayCommand/ObservableObject) -->
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <!-- IMPORTANT: Exclude test files and test project folder from shipping build -->
+  <ItemGroup>
+    <Compile Remove="**\*.Test.cs" />
+    <Compile Remove="Tests\**" />
+    <None Include="**\*.Test.cs" />
+  </ItemGroup>
+
+  <!-- Toggle sample source exclusion with IncludeSamples (default false) -->
+  <ItemGroup Condition="'$(IncludeSamples)' != 'true'">
+    <Compile Remove="**\*.Sample.cs" />
+    <Compile Remove="**\*.Sample.Test.cs" />
+    <None Include="**\*.Sample.cs" />
+    <None Include="**\*.Sample.Test.cs" />
   </ItemGroup>
 
   <!-- Publish Properties

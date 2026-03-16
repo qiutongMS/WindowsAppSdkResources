@@ -1,7 +1,7 @@
 ---
 title: Get started with Windows ML
 description: Learn how to use Windows ML to download and register AI execution providers for hardware-optimized inference.
-ms.date: 08/13/2025
+ms.date: 02/11/2026
 ms.topic: how-to
 ---
 
@@ -33,7 +33,7 @@ Python versions 3.10 to 3.13, on x64 and ARM64 devices.
 
 ## Step 1: Install or update the Windows App SDK
 
-The Model Catalog APIs are included in the **experimental** version of [Windows App SDK 2.0.0 or greater](/windows/apps/windows-app-sdk/experimental-channel).
+Windows ML is included in [Windows App SDK 1.8.1 or greater](/windows/apps/windows-app-sdk/stable-channel).
 
 ### [C#](#tab/csharp)
 
@@ -49,9 +49,7 @@ The Python binding leverages the [pywinrt](https://github.com/pywinrt/pywinrt) p
 
 Please install the python packages with these commands:
 ```PowerShell
-pip install wasdk-Microsoft.Windows.AI.MachineLearning[all] wasdk-Microsoft.Windows.ApplicationModel.DynamicDependency.Bootstrap
-# The onnxruntime-winml package is not published to PyPI yet. Please install it from the ort-nightly feed
-pip install --pre --index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ORT-Nightly/pypi/simple/ --extra-index-url https://pypi.org/simple onnxruntime-winml
+pip install wasdk-Microsoft.Windows.AI.MachineLearning[all] wasdk-Microsoft.Windows.ApplicationModel.DynamicDependency.Bootstrap onnxruntime-windowsml
 ```
 
 Please make sure the `wasdk-` packages' version matches the WindowsAppRuntime's version.
@@ -176,6 +174,9 @@ WinML().register_execution_providers_to_ort()
 ---
 
 > [!TIP]
+> You can sometimes get better performance in ONNX Runtime by enabling thread spinning. See [Thread spinning behavior in Windows ML](./run-onnx-models.md#thread-spinning-behavior) for more info.
+
+> [!TIP]
 > In production applications, wrap the `EnsureAndRegisterCertifiedAsync()` call in a try-catch block to handle potential network or download failures gracefully.
 
 ## Next steps
@@ -186,12 +187,10 @@ After registering execution providers, you're ready to use the ONNX Runtime APIs
 2. **[Get your models](./model-catalog/overview.md)** - Use Model Catalog to dynamically download models, or include them locally
 3. **[Run model inference](./run-onnx-models.md)** - Compile, load, and inference your model
 
-[!INCLUDE [C# tensors issue](./includes/csharp-tensors-issue.md)]
-
 ## See also
 
 * **[Model Catalog](./model-catalog/overview.md)** - Dynamically download models from online catalogs
-* **[Initialize execution providers](./initialize-execution-providers.md)** - Additional ways you can handle download of EPs
+* **[Install execution providers](./initialize-execution-providers.md)** - Additional ways you can handle download of EPs
 * **[Distribute your app](./distributing-your-app.md)** - Info about distributing an app using Windows ML
 * **[ONNX versions in Windows ML](./onnx-versions.md)** - Info about which ONNX Runtime version ships with Windows ML
 * **[Tutorial](./tutorial.md)** - Full end-to-end tutorial using Windows ML with the ResNet-50 model

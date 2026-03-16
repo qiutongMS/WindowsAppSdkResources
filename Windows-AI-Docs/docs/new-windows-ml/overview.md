@@ -7,7 +7,7 @@ ms.date: 11/18/2025
 
 # What is Windows ML?
 
-Windows Machine Learning (ML) enables C#, C++, and Python developers to run ONNX AI models locally on Windows PCs via the [ONNX Runtime](https://onnxruntime.ai/docs/), with automatic execution provider management for different hardware (CPUs, GPUs, NPUs). ONNX Runtime can be used with models from PyTorch, Tensorflow/Keras, TFLite, scikit-learn, and other frameworks.
+Windows Machine Learning (ML) enables C#, C++, and Python developers to run ONNX AI models locally on Windows PCs via the [ONNX Runtime](https://onnxruntime.ai/docs/), with automatic execution provider management for different hardware (CPUs, GPUs, NPUs). You can use models from PyTorch, Tensorflow/Keras, TFLite, scikit-learn, and other frameworks with ONNX Runtime.
 
 :::image type="content" source="../images/winml-diagram.png" alt-text="A diagram illustrating an ONNX model going through Windows ML to then reach NPUs, GPUs, and CPUs.":::
 
@@ -25,6 +25,9 @@ If you're not already familiar with the ONNX Runtime, we suggest reading the [ON
 - **OS**: Version of Windows that [Windows App SDK supports](/windows/apps/windows-app-sdk/support)
 - **Architecture**: x64 or ARM64
 - **Hardware**: Any PC configuration (CPUs, integrated/discrete GPUs, NPUs)
+
+> [!NOTE]
+> Support for CPU and GPU (via DirectML) is available on all supported Windows versions. Vendor-optimized execution providers for NPUs and specific GPU hardware require Windows 11 version 24H2 (build 26100) or greater. For detail, see [Supported execution providers](./supported-execution-providers.md).
 
 ## What is an execution provider?
 
@@ -57,7 +60,7 @@ The latest version of Windows ML works directly with dedicated execution provide
 
 ## Using execution providers with Windows ML
 
-The Windows ML runtime provides a flexible way to access machine learning (ML) execution providers (EPs), which can optimize ML model inference on different hardware configurations. Those EPs are distributed as separate packages that can be updated independently from the operating system. See the [initialize execution providers with Windows ML](./initialize-execution-providers.md) docs for more info about dynamically downloading and registering EPs.
+The Windows ML runtime provides a flexible way to access machine learning (ML) execution providers (EPs), which can optimize ML model inference on different hardware configurations. Those EPs are distributed as separate packages that can be updated independently from the operating system. See the [install execution providers](./initialize-execution-providers.md) docs for more info about dynamically downloading and installing EPs.
 
 ## Converting models to ONNX
 

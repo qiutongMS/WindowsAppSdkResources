@@ -56,7 +56,7 @@ sessionOptions.SetEpSelectionPolicy(ExecutionProviderDevicePolicy.MIN_OVERALL_PO
 
 ### [C++](#tab/cpp)
 
-```cpp
+```cppwinrt
 winrt::init_apartment();
 // Initialize ONNX Runtime
 Ort::Env env(ORT_LOGGING_LEVEL_ERROR, "CppConsoleDesktop");
@@ -163,9 +163,10 @@ string executableFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Loc
 string labelsPath = Path.Combine(executableFolder, "ResNet50Labels.txt");
 string imagePath = Path.Combine(executableFolder, "dog.jpg");
             
-// TODO: Please use AITK Model Conversion tool to download and convert Resnet, and paste the converted path here
-string modelPath = @"";
-string compiledModelPath = @"";
+// Set the paths to your converted ONNX model
+// Use AI Toolkit to download and convert ResNet-50 to ONNX format: https://code.visualstudio.com/docs/intelligentapps/modelconversion
+string modelPath = Path.Combine(executableFolder, "resnet50-v2-7.onnx");
+string compiledModelPath = Path.Combine(executableFolder, "resnet50-v2-7-compiled.onnx");
 
 // Compile the model if not already compiled
 bool isCompiled = File.Exists(compiledModelPath);
@@ -197,15 +198,16 @@ var modelPathToUse = isCompiled ? compiledModelPath : modelPath;
 
 ### [C++](#tab/cpp)
 
-```cpp
+```cppwinrt
 // Prepare paths for model and labels
 std::filesystem::path executableFolder = ResnetModelHelper::GetExecutablePath().parent_path();
 std::filesystem::path labelsPath = executableFolder / "ResNet50Labels.txt";
 std::filesystem::path dogImagePath = executableFolder / "dog.jpg";
 
-// TODO: use AITK Model Conversion tool to get resnet and paste the path here
-std::filesystem::path modelPath = L"";
-std::filesystem::path compiledModelPath = L"";
+// Set the paths to your converted ONNX model
+// Use AI Toolkit to download and convert ResNet-50 to ONNX format: https://code.visualstudio.com/docs/intelligentapps/modelconversion
+std::filesystem::path modelPath = executableFolder / L"resnet50-v2-7.onnx";
+std::filesystem::path compiledModelPath = executableFolder / L"resnet50-v2-7-compiled.onnx";
 bool isCompiledModelAvailable = std::filesystem::exists(compiledModelPath);
 
 if (isCompiledModelAvailable)
@@ -311,7 +313,7 @@ PrintResults(labels, resultTensor);
 
 ### [C++](#tab/cpp)
 
-```cpp
+```cppwinrt
 Ort::Session session(env, modelPathToUse.c_str(), sessionOptions);
 std::cout << "ResNet model loaded"<< std::endl;
 
@@ -479,7 +481,7 @@ private static void PrintResults(IList<string> labels, IReadOnlyList<float> resu
 
 ### [C++](#tab/cpp)
 
-```cpp
+```cppwinrt
 void PrintResults(const std::vector<std::string>& labels, const std::vector<float>& results) {
     // Apply softmax to the results  
     float maxLogit = *std::max_element(results.begin(), results.end());

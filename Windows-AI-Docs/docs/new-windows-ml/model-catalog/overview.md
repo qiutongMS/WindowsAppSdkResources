@@ -1,17 +1,17 @@
 ---
-title: Download and share models on-device with the Windows ML Model Catalog APIs
+title: Share models across apps with the Windows ML Model Catalog APIs
 description: Learn about Windows ML Model Catalog APIs that allow your app or library to dynamically download large AI model files to a shared on-device location from your own online model catalogs.
 ms.topic: overview
 ms.date: 09/26/2024
 ---
 
-# Download and share models on-device with the Windows ML Model Catalog APIs
+# Share models across apps with the Windows ML Model Catalog APIs
 
 The Windows ML Model Catalog APIs allow your app or library to dynamically download large AI model files to a shared on-device location from your own online model catalogs without shipping those large files directly with your app or library. Additionally, the model catalog will help filter which models are compatible with the Windows device it's running on, so that the right model is downloaded to the device.
 
 ## What are the Model Catalog APIs?
 
-The Model Catalog APIs are a set of APIs that can be connected to one or many cloud model catalogs to facilitate downloading and storing those models locally on the device so that they can be used by any Windows applications on the device. The APIs have a few core features:
+The Model Catalog APIs are a set of APIs that you can use to facilitate downloading models from an online catalog and storing models locally on the device so that any Windows applications on the device can use them. The APIs have a few core features:
 
 - **Add catalogs**: Add one or many online catalogs
 - **Discover compatible models**: Automatically find models that work with the user's hardware and execution providers
